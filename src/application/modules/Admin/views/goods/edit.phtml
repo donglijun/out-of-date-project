@@ -1,0 +1,59 @@
+<div class="container">
+    <h1 class="text-center">Edit Goods</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <form class="form-horizontal" role="form" method="post" action="/admin/goods/<?=$action?>" enctype="multipart/form-data">
+                <input type="hidden" name="id" id="id" value="<?=isset($id) ? $id : ''?>" />
+                <div class="form-group">
+                    <label for="title" class="col-sm-2 control-label">Title</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="title" name="title" value="<?=isset($data['title']) ? Misc::escape($data['title']) : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="price" class="col-sm-2 control-label">Price</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="price" name="price" value="<?=isset($data['price']) ? $data['price'] : 0?>" <?php if ($action == 'update') {?>  readonly="readonly" <?php } ?>>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="description" class="col-sm-2 control-label">Description</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" id="description" name="description" rows="5" maxlength="255"><?=isset($data['description']) ? Misc::escape($data['description']) : ''?></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="slogan" class="col-sm-2 control-label">Slogan</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" id="slogan" name="slogan" rows="5" maxlength="255"><?=isset($data['slogan']) ? Misc::escape($data['slogan']) : ''?></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="effect_trigger" class="col-sm-2 control-label">Effect Trigger</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="effect_trigger" name="effect_trigger" value="<?=isset($data['effect_trigger']) ? $data['effect_trigger'] : 0?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="rarity" class="col-sm-2 control-label">Rarity</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="rarity" name="rarity" value="<?=isset($data['rarity']) ? $data['rarity'] : 0?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="is_active" class="col-sm-2 control-label">Active</label>
+                    <div class="col-sm-8">
+                        <input type="checkbox" name="is_active" value="1" <?=isset($data['is_active']) && $data['is_active'] ? 'checked="checked"' : ''?>>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="/admin/goods/list" class="btn btn-default">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

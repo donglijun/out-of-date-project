@@ -1,0 +1,141 @@
+<div class="container">
+    <h1 class="text-center">Red Schedules</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <a href="/admin/red/new_schedule" id="btn-schedule" class="btn btn-warning">New Schedule</a>
+        </div>
+        <div class="col-md-6">
+            &nbsp;
+        </div>
+        <div class="col-md-4">
+            &nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Points</th>
+                    <th>Number</th>
+                    <th>Publish On</th>
+                    <th>Publish Status</th>
+                    <th>
+                        &nbsp;
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=$row['points']?></td>
+                        <td><?=$row['number']?></td>
+                        <td><?=$row['publish_on'] ? date('Y-m-d H:i', $row['publish_on']) : ''?></td>
+                        <td><?=$publishStatusMessages[$row['publish_status']] . ' (' . $row['publish_status'] . ')' ?></td>
+                        <td>
+                            <a href="/admin/red/view_schedule?id=<?=$row['id']?>" target="_blank" class="btn btn-primary btn-sm">View</a>
+                            <a href="/admin/red/cancel_schedule?ids=<?=$row['id']?>" class="btn btn-danger btn-sm btn-cancel" data-id="<?=$row['id']?>">Cancel</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<?php include Yaf_View_Simple::getScriptPath() . DIRECTORY_SEPARATOR . 'red' . DIRECTORY_SEPARATOR . 'modal-schedule.phtml'; ?>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $("#btn-schedule").click(function() {
+            $.post(
+                "/admin/point/balance",
+                {},
+                function(response) {
+                    if (response.code == 200) {
+                        $("#schedule-current").val(response.data + "");
+                        $("#schedule-date").val("<?=date('Y-m-d')?>");
+                        $("#schedule-time").val("<?=date('H:00:00', strtotime("+1 hour"))?>");
+
+                        $("#schedule-modal").modal("show");
+                    }
+                },
+                "json"
+            );
+
+            return false;
+        });
+
+        $("#submit-schedule").click(function() {
+            var points = $("#schedule-points").val(),
+                number = $("#schedule-number").val(),
+                memo   = $("#schedule-memo").val(),
+                date   = $("#schedule-date").val(),
+                time   = $("#schedule-time").val(),
+                targetClient = $('input[name="publish-target-client"]:checked').val();
+
+            $.post(
+                "/admin/red/new_schedule",
+                {
+                    points: points,
+                    number: number,
+                    memo: memo,
+                    date: date,
+                    time: time,
+                    target_client: targetClient
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        window.alert(response.message);
+
+                        window.location.reload();
+                    } else {
+                        window.alert(response.message ? response.message : "Failed");
+                    }
+                },
+                "json"
+            );
+
+            $("#schedule-modal").modal("hide");
+        });
+
+        $(".btn-cancel").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/red/cancel_schedule",
+                        {
+                            ids: id
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                $("#row-" + id).remove();
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+    });
+</script>

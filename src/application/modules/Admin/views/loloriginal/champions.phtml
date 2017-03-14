@@ -1,0 +1,61 @@
+<div class="container">
+    <h1 class="text-center">Original Champions</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-inline" role="form" method="get" action="/admin/loloriginal/champions">
+                <div class="form-group">
+                    <label for="lang" class="control-label input-sm">Lang</label>
+                    <select id="lang" name="lang" class="form-control input-sm">
+                        <?php foreach ($langs as $val) { ?>
+                            <option value="<?=$val?>" <?=(isset($filter['lang']) && $val==$filter['lang']) ? 'selected="selected"' : ''?>><?=$val?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="q" class="control-label input-sm">Keyword</label>
+                    <input type="text" name="q" class="form-control input-sm" value="<?=isset($filter['q']) ? $filter['q'] : ''?>">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+                <a href="#" class="btn btn-primary btn-sm" data-url="/admin/loloriginal/getchampionsjs?lang=" target="_blank" onclick="$(this).attr('href', $(this).data('url') + $('#lang').val());">Get JSON</a>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <?php if (isset($paginator)) {?>
+            <div class="col-md-12">
+                <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+            </div>
+        <?php } ?>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                if (isset($data)) { foreach ($data as $row) {
+                    ?>
+                    <tr>
+                        <td><?=$row['id']?></td>
+                        <td><?=Misc::escape($row['displayName'])?></td>
+                        <td><?=Misc::escape($row['title'])?></td>
+                        <td><?=Misc::escape($row['description'])?></td>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                <?php }} ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

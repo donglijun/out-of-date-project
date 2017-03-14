@@ -1,0 +1,43 @@
+<div class="container">
+    <h1 class="text-center">Admin Accounts</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <a href="/admin/account/create" class="btn btn-primary">Add</a>
+        </div>
+        <div class="col-md-8">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Name</th>
+                        <th>Group</th>
+                        <th>Last login</th>
+                        <th>Last login IP</th>
+                        <th>Operation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr>
+                        <td><?=$row['user']?></td>
+                        <td><?=$row['name']?></td>
+                        <td><?=$groups[$row['group']]?></td>
+                        <td><?=isset($row['last_login_on']) && $row['last_login_on'] ? date('Y-m-d H:i', $row['last_login_on']) : ''?></td>
+                        <td><?=$row['last_login_ip']?></td>
+                        <td>
+                            <a href="/admin/account/delete?users=<?=$row['user']?>" class="btn btn-danger btn-sm" onclick="return window.confirm('Really???');">Delete</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

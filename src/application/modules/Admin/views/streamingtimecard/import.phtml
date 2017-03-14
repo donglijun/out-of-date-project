@@ -1,0 +1,22 @@
+<div class="container">
+    <h1 class="text-center">Import Time Cards</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <form class="form-horizontal" role="form" method="post" action="/admin/streamingtimecard/import">
+                <div class="form-group">
+                    <label for="cards" class="col-sm-4 control-label">Card Numbers</label>
+                    <div class="col-sm-8">
+                        <textarea class="form-control" id="cards" name="cards" rows="20"><?=isset($data['cards']) ? $data['cards'] : ''?></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="<?=$_SERVER['HTTP_REFERER'] ?: '/admin/streamingtimecard/list'?>" class="btn btn-default">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

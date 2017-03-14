@@ -1,0 +1,160 @@
+<div class="container">
+    <h1 class="text-center">Column Link List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            &nbsp;
+        </div>
+        <div class="col-md-10">
+            <form class="form-inline" role="form" method="get" action="/admin/videolinkcolumn/list">
+                <div class="form-group">
+                    <label for="column" class="control-label input-sm">Column</label>
+                    <select name="column" class="form-control input-sm">
+                        <option value="">All</option>
+                        <?php foreach ($columns as $val) { ?>
+                            <option value="<?=$val['id']?>" <?=(isset($filter['column']) && $val['id']==$filter['column']) ? 'selected="selected"' : ''?>><?=Misc::escape($val['name'])?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" class="multi-select" name="selectAll" id="selectAll"></th>
+                    <th>ID</th>
+                    <th>Link</th>
+                    <th>Columns</th>
+                    <th>Display Order</th>
+                    <th>
+                        <button type="button" class="btn btn-primary btn-sm" id="btn-publish-multi">Batch Publish</button>
+                        <button type="button" class="btn btn-danger btn-sm" id="btn-delete-multi">Batch Delete</button>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><input type="checkbox" class="multi-select" name="ids" value="1" data-id="<?=$row['id']?>" data-link="<?=$row['link']?>"></td>
+                        <td><?=$row['id']?></td>
+                        <td><?php if (isset($links[$row['link']])) { ?><a href="<?=Misc::escape($links[$row['link']]['url'])?>" target="_blank"><?=Misc::escape($links[$row['link']]['title'])?></a><?php } else { ?><?=$row['link']?><?php } ?></td>
+                        <td><?=$row['column']?></td>
+                        <td><?=$row['display_order']?></td>
+                        <td>
+                            <a href="/admin/videolinkcolumn/update?id=<?=$row['id']?>" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="/admin/videolinkcolumn/top?id=<?=$row['id']?>" class="btn btn-primary btn-sm btn-top" data-id="<?=$row['id']?>">Top</a>
+                            <a href="/admin/videolinkcolumn/delete?ids=<?=$row['id']?>" class="btn btn-danger btn-sm btn-delete" data-id="<?=$row['id']?>">Delete</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $(".btn-delete").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/videolinkcolumn/delete",
+                        {
+                            ids: id
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                $("#row-" + id).remove();
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+
+        $(".btn-top").each(function() {
+            $(this).click(function() {
+                var btn = $(this),
+                    id  = btn.data("id");
+
+                $.post(
+                    "/admin/videolinkcolumn/top",
+                    {
+                        id: id
+                    },
+                    function(response) {
+                        window.location.reload();
+                    },
+                    "json"
+                );
+
+                return false;
+            });
+        });
+
+        $("#btn-delete-multi").click(function() {
+            if (window.confirm('Really delete all selected???')) {
+                var ids = "";
+                $("[name='ids']").each(function () {
+                    if ($(this).prop("checked") == true) {
+                        ids += ids ? ',' + $(this).data("id") : $(this).data("id");
+                    }
+                });
+
+                if (ids) {
+                    $.post(
+                        "/admin/videolinkcolumn/delete",
+                        {
+                            ids: ids
+                        },
+                        function (response) {
+                            if (response.code == 200) {
+                                $("[name='ids']").each(function () {
+                                    if ($(this).prop("checked") == true) {
+                                        $("#row-" + $(this).data("id")).remove();
+                                    }
+                                });
+                            }
+                        },
+                        "json"
+                    );
+                }
+            }
+        });
+
+        $("#btn-publish-multi").click(function() {
+            var links = "";
+            $("[name='ids']").each(function () {
+                if ($(this).prop("checked") == true) {
+                    links += links ? ',' + $(this).data("link") : $(this).data("link");
+                }
+            });
+
+            if (links) {
+                window.open('/admin/videolinkcolumn/publish?links=' + links);
+            }
+        });
+    });
+</script>

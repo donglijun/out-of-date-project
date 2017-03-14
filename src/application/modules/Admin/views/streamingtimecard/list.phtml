@@ -1,0 +1,64 @@
+<div class="container">
+    <h1 class="text-center">Streaming Time Cards</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <a href="/admin/streamingtimecard/import" class="btn btn-primary">Import</a>
+        </div>
+        <div class="col-md-10">
+            <form class="form-inline" role="form" method="get" action="/admin/streamingtimecard/list">
+                <div class="form-group">
+                    <label for="number" class="control-label input-sm">Card Number</label>
+                    <input type="text" name="number" id="number" class="form-control input-sm" value="<?=isset($filter['number']) ? $filter['number'] : ''?>">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Number</th>
+                    <th>Status</th>
+                    <th>Created on</th>
+                    <th>Consumed on</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=$row['number']?></td>
+                        <td><?=$row['status']?></td>
+                        <td><?=date('Y-m-d H:i', $row['created_on'])?></td>
+                        <td><?=$row['consumed_on'] ? date('Y-m-d H:i', $row['consumed_on']) : ''?></td>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+    });
+</script>

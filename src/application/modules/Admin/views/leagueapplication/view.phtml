@@ -1,0 +1,226 @@
+<div class="container">
+    <h1 class="text-center">View League Application Info</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/leagueapplication/list" class="btn btn-primary">Applications</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <th>ID</th>
+                    <td><?=isset($data['id']) ? $data['id'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Season</th>
+                    <td><?=isset($data['season']) ? Misc::escape($seasons[$data['season']]['title']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Title</th>
+                    <td><?=isset($data['title']) ? Misc::escape($data['title']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Leader Name</th>
+                    <td><?=isset($data['leader_name']) ? Misc::escape($data['leader_name']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Leader Phone</th>
+                    <td><?=isset($data['leader_phone']) ? Misc::escape($data['leader_phone']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Leader Phone2</th>
+                    <td><?=isset($data['leader_phone2']) ? Misc::escape($data['leader_phone2']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Leader Email</th>
+                    <td><?=isset($data['leader_email']) ? Misc::escape($data['leader_email']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Teams</th>
+                    <td>
+                        <?php foreach ($data['teams'] as $member) {?>
+                        <span class="label label-info" style="display: inline-block;">
+                            <?=Misc::escape($member['name'])?>
+                            <span class="badge"><?=Misc::escape($member['title'])?></span>
+                        </span>
+                        <?php } ?>
+                        <?php if (($data['app_status'] == MySQL_League_ApplicationModel::APP_STATUS_APPROVED) && (Yaf_Session::getInstance()->admin['group'] <= MySQL_AdminAccountModel::GROUP_SUPER_ADMIN)) { ?>
+                            <a href="#" class="btn btn-warning btn-sm btn-modify-teams" data-id="<?=$data['id']?>">Modify</a>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Logo</th>
+                    <td>
+                        <?php if (isset($data['logo']) && $data['logo']) { ?>
+                            <img src="//s3.nikksy.com/<?=$data['logo']?>" alt="">
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Video</th>
+                    <td><?=isset($data['video']) ? Misc::escape($data['video']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>
+                        <pre><?=isset($data['description']) ? Misc::escape($data['description']) : ''?></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Memo</th>
+                    <td>
+                        <pre id="memo-<?=$data['id']?>"><?=isset($data['memo']) ? Misc::escape($data['memo']) : ''?></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Reason</th>
+                    <td>
+                        <pre id="reason-<?=$data['id']?>"><?=isset($data['reason']) ? Misc::escape($data['reason']) : ''?></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Created On</th>
+                    <td><?=isset($data['created_on']) ? date('Y-m-d H:i:s', $data['created_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Created By</th>
+                    <td><?=isset($data['created_by']) ? $data['created_by'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        <?php if ($data['app_status'] == MySQL_League_ApplicationModel::APP_STATUS_PENDING) { ?>
+                            <span class="label label-default">Pending</span>
+
+                            <a href="/admin/leagueapplication/approve?id=<?=$data['id']?>" class="btn btn-info btn-sm btn-approve" data-id="<?=$data['id']?>">Approve</a>
+                            <a href="/admin/leagueapplication/deny?id=<?=$data['id']?>" class="btn btn-danger btn-sm btn-deny" data-id="<?=$data['id']?>">Deny</a>
+                        <?php } else if ($data['app_status'] == MySQL_League_ApplicationModel::APP_STATUS_APPROVED) { ?>
+                            <span class="label label-success">Approved</span>
+                        <?php } else if ($data['app_status'] == MySQL_League_ApplicationModel::APP_STATUS_DENIED) { ?>
+                            <span class="label label-danger">Denied</span>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Processed On</th>
+                    <td><?=isset($data['processed_on']) && $data['processed_on'] ? date('Y-m-d H:i:s', $data['processed_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Processed By</th>
+                    <td><?=isset($data['processed_by']) ? $data['processed_by'] : ''?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<?php include Yaf_View_Simple::getScriptPath() . DIRECTORY_SEPARATOR . 'streamingchannel' . DIRECTORY_SEPARATOR . 'modal-memo.phtml'; ?>
+
+<?php include Yaf_View_Simple::getScriptPath() . DIRECTORY_SEPARATOR . 'leagueapplication' . DIRECTORY_SEPARATOR . 'modal-modify-teams.phtml'; ?>
+
+<script>
+    $(function() {
+        $(".btn-approve").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really approve???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/leagueapplication/approve",
+                        {
+                            id: id
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                window.alert(response.message);
+
+                                window.location.reload();
+                            } else {
+                                window.alert(response.message ? response.message : "Failed");
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+
+        $(".btn-deny").each(function() {
+            $(this).click(function() {
+                var reason = window.prompt("Why is rejected?", "");
+
+                if ((reason != null) && (reason != "")) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/leagueapplication/deny",
+                        {
+                            id: id,
+                            reason: reason
+                        },
+                        function(response) {
+                            window.location.reload();
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+
+        $(".btn-modify-teams").each(function() {
+            $(this).click(function() {
+                var id = "<?=$data['id']?>",
+                    teams = "";
+                <?php foreach ($data['teams'] as $member) {?>
+                    <?php foreach ($member as $key => $val) { ?>
+                    teams = teams + "<?=$key?>" + ":" + "<?=$val?>" + "\t";
+                    <?php } ?>
+                    teams = teams + "\n";
+                <?php } ?>
+
+                $("#input-app-id").val(id + "");
+
+                $("#input-teams-memo").val(teams + "");
+
+                $("#modify-teams-modal").modal("show");
+
+                return false;
+            })
+        });
+
+        $("#submit-modify").click(function() {
+            var id = $("#input-app-id").val(),
+                teams = $("#input-teams-memo").val();
+
+            $.post(
+                "/admin/leagueapplication/modify_teams",
+                {
+                    id: id,
+                    teams: teams
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        window.alert(response.message);
+
+                        window.location.reload();
+                    } else {
+                        window.alert(response.message ? response.message : "Failed");
+                    }
+                },
+                "json"
+            );
+
+            $("#modify-teams-modal").modal("hide");
+        });
+    });
+</script>

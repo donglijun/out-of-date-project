@@ -1,0 +1,64 @@
+<div class="container">
+    <h1 class="text-center">Streaming Schedules</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Channel</th>
+                    <th>Push on</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=$row['channel']?></td>
+                        <td><?=date('Y-m-d H:i', $row['push_on'])?></td>
+                        <td>
+                            <a href="/admin/streamingchannel/cancelschedule?ids=<?=$row['id']?>" class="btn btn-danger btn-sm btn-cancel" data-id="<?=$row['id']?>">Cancel</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $(".btn-cancel").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/streamingchannel/cancelschedule",
+                        {
+                            ids: id
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                $("#row-" + id).remove();
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+    });
+</script>

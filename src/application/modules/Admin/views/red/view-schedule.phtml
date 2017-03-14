@@ -1,0 +1,58 @@
+<div class="container">
+    <h1 class="text-center">View Schedule Info</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/red/schedules" class="btn btn-primary">Schedule List</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <th>Schedule ID</th>
+                    <td><?=isset($data['id']) ? $data['id'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Points</th>
+                    <td><?=isset($data['points']) ? $data['points'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Number</th>
+                    <td><?=isset($data['number']) ? $data['number'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Memo</th>
+                    <td>
+                        <pre><?=isset($data['memo']) ? Misc::escape($data['memo']) : ''?></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Target Channel</th>
+                    <td><?=isset($data['target_channel']) ? $data['target_channel'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Target Client</th>
+                    <td><?=isset($data['target_client']) && isset($clients[$data['target_client']]) ? $clients[$data['target_client']] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Publish On</th>
+                    <td><?=isset($data['publish_on']) ? date('Y-m-d H:i', $data['publish_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Publish Status</th>
+                    <td><?=isset($data['publish_status']) ? $publishStatusMessages[$data['publish_status']] . ' (' . $data['publish_status'] . ')' : ''?></td>
+                </tr>
+                <tr>
+                    <th>Created On</th>
+                    <td><?=isset($data['created_on']) ? date('Y-m-d H:i', $data['created_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Created By</th>
+                    <td><?=isset($data['created_by']) ? Misc::escape($data['created_name']) . ' (' . $data['created_by'] . ')' : ''?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

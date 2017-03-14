@@ -1,0 +1,30 @@
+<div class="modal fade" id="import-modal" tabindex="-1" role="dialog" aria-labelledby="import-card" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="importModalLabel">Import Time Card</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="input-card-type" class="control-label">Type:</label>
+                        <select id="input-card-type" name="input-card-type" class="form-control">
+                            <?php foreach ($types as $val) { ?>
+                                <option value="<?=$val['id']?>"><?=Misc::escape($val['title'])?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-cards" class="control-label">Cards:</label>
+                        <textarea id="input-cards" name="input-cards" class="form-control" rows="8"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="import-cards">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>

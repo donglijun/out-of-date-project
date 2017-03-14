@@ -1,0 +1,55 @@
+<div class="modal fade" id="schedule-modal" tabindex="-1" role="dialog" aria-labelledby="schedule" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">New Red Schedule</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="schedule-date" class="control-label">Date:</label>
+                        <input type="text" class="form-control input-sm" id="schedule-date" name="schedule-date" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="schedule-time" class="control-label">Time:</label>
+                        <input type="text" class="form-control input-sm" id="schedule-time" name="schedule-time" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="schedule-current" class="control-label">Current:</label>
+                        <input type="text" class="form-control input-sm" id="schedule-current" name="schedule-current" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="schedule-points" class="control-label">Points:</label>
+                        <input type="text" class="form-control input-sm" id="schedule-points" name="schedule-points" value="8000">
+                    </div>
+                    <div class="form-group">
+                        <label for="schedule-number" class="control-label">Number:</label>
+                        <input type="text" class="form-control input-sm" id="schedule-number" name="schedule-number" value="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="schedule-memo" class="control-label">Memo:</label>
+                        <textarea id="schedule-memo" name="schedule-memo" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="publish-target-client" class="control-label">Client:</label>
+                        <div class="col-sm-12">
+                            <label class="radio-inline">
+                                <input type="radio" name="publish-target-client" id="publish-target-client0" value="0" checked="checked"> All
+                            </label>
+                            <?php foreach ($clients as $key => $val) { ?>
+                                <label class="radio-inline">
+                                    <input type="radio" name="publish-target-client" id="publish-target-client<?=$key?>" value="<?=$key?>"> <?=$val?>
+                                </label>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submit-schedule">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>

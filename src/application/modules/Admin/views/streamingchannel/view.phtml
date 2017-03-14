@@ -1,0 +1,114 @@
+<div class="container">
+    <h1 class="text-center">View Channel Info</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/streamingchannel/list" class="btn btn-primary">Channel List</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <th>Channel ID</th>
+                    <td><?=isset($data['id']) ? $data['id'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Owner Name</th>
+                    <td><?=isset($data['owner_name']) ? Misc::escape($data['owner_name']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Created On</th>
+                    <td><?=isset($data['created_on']) ? date('Y-m-d H:i', $data['created_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Alias</th>
+                    <td><?=isset($data['alias']) ? Misc::escape($data['alias']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Title</th>
+                    <td><?=isset($data['title']) ? Misc::escape($data['title']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Stream Key</th>
+                    <td><?=isset($data['stream_key']) ? Misc::escape($data['stream_key']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Followers</th>
+                    <td><?=isset($data['followers']) ? number_format($data['followers']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Total Views</th>
+                    <td><?=isset($data['total_views']) ? number_format($data['total_views']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Watching Now</th>
+                    <td><?=isset($data['watching_now']) ? number_format($data['watching_now']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Online</th>
+                    <td><?=$data['is_online'] ? 'Yes' : 'No'?></td>
+                </tr>
+                <tr>
+                    <th>Banned</th>
+                    <td><?=$data['is_banned'] ? 'Yes' : 'No'?></td>
+                </tr>
+                <tr>
+                    <th>Signed</th>
+                    <td><?=$data['is_signed'] ? 'Yes' : 'No'?></td>
+                </tr>
+                <tr>
+                    <th>Paypal</th>
+                    <td><?=isset($data['paypal']) ? Misc::escape($data['paypal']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Facebook</th>
+                    <td><?=isset($data['facebook']) ? Misc::escape($data['facebook']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Withdraw Rate</th>
+                    <td><?=isset($data['withdraw_rate']) ? $data['withdraw_rate'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Playing Game</th>
+                    <td><?=isset($data['playing_game']) ? Misc::escape($data['playing_game']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Memo</th>
+                    <td>
+                        <pre><?=isset($data['memo']) ? Misc::escape($data['memo']) : ''?></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Upstream IP</th>
+                    <td><?=isset($data['upstream_ip']) ? Misc::escape($data['upstream_ip']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Upstream On</th>
+                    <td><?=isset($data['upstream_on']) && $data['upstream_on'] ? date('Y-m-d H:i:s', $data['upstream_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Resolutions</th>
+                    <td><?=isset($data['resolutions']) ? Misc::escape($data['resolutions']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Small Show Image</th>
+                    <td>
+                        <?php if (isset($data['small_show_image_url'])) { ?>
+                            <img src="<?=$data['small_show_image_url']?>" alt="">
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Large Show Image</th>
+                    <td>
+                        <?php if (isset($data['large_show_image_url'])) { ?>
+                            <img src="<?=$data['large_show_image_url']?>" alt="">
+                        <?php } ?>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

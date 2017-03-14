@@ -1,0 +1,48 @@
+<div class="container">
+    <h1 class="text-center">View Time Card Info</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/timecard/list" class="btn btn-primary">Time Card List</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <th>Card ID</th>
+                    <td><?=isset($data['id']) ? $data['id'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Code</th>
+                    <td><?=isset($data['code']) ? Misc::escape($data['code']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Type</th>
+                    <td><?=isset($data['type_title']) ? Misc::escape($data['type_title']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td><?=isset($data['status']) ? $data['status'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Created On</th>
+                    <td><?=isset($data['created_on']) && $data['created_on'] ? date('Y-m-d H:i:s', $data['created_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Created By</th>
+                    <td><?=isset($data['created_by']) && $data['created_by'] ? $data['created_by'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Consumed On</th>
+                    <td><?=isset($data['consumed_on']) && $data['consumed_on'] ? date('Y-m-d H:i:s', $data['consumed_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Consumed By</th>
+                    <td><?=isset($data['consumed_by']) && $data['consumed_by'] ? $data['consumed_by'] : ''?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="modal fade" id="complete-modal" tabindex="-1" role="dialog" aria-labelledby="complete" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Complete Withdraw Order</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="complete-order-id" class="control-label">Order ID:</label>
+                        <input type="text" class="form-control input-sm" id="complete-order-id" name="complete-order-id" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="complete-paypal" class="control-label">Paypal:</label>
+                        <input type="text" class="form-control input-sm" id="complete-paypal" name="complete-paypal" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="complete-order-id" class="control-label">Pay Money:</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="text" class="form-control input-sm" aria-label="Amount (to the nearest dollar)" id="complete-pay-money" name="complete-pay-money" value="">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submit-complete">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>

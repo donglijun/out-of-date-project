@@ -1,0 +1,57 @@
+<div class="container">
+    <h1 class="text-center">Edit Gold Package</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <form class="form-horizontal" role="form" method="post" action="/admin/goldpackage/<?=$action?>" enctype="multipart/form-data">
+                <input type="hidden" name="id" id="id" value="<?=isset($id) ? $id : ''?>" />
+                <div class="form-group">
+                    <label for="title" class="col-sm-2 control-label">Title</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="title" name="title" value="<?=isset($data['title']) ? Misc::escape($data['title']) : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="money" class="col-sm-2 control-label">Money</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="money" name="money" value="<?=isset($data['money']) ? $data['money'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="money_unit" class="col-sm-2 control-label">Unit</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="money_unit" name="money_unit" value="<?=isset($data['money_unit']) ? Misc::escape($data['money_unit']) : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="golds" class="col-sm-2 control-label">Golds</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="golds" name="golds" value="<?=isset($data['golds']) ? $data['golds'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="bonus" class="col-sm-2 control-label">Bonus</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="bonus" name="bonus" value="<?=isset($data['bonus']) ? $data['bonus'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="client" class="col-sm-2 control-label">Client</label>
+                    <div class="col-sm-10">
+                        <select name="client" class="form-control input-sm">
+                            <?php foreach ($clients as $key => $val) { ?>
+                                <option value="<?=$key?>" <?=(isset($data['client']) && $key==$data['client']) ? 'selected="selected"' : ''?>><?=Misc::escape($val)?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="/admin/goldpackage/list" class="btn btn-default">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

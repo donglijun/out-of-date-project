@@ -1,0 +1,80 @@
+<div class="container">
+    <h1 class="text-center">Channel Incoming</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            &nbsp;
+        </div>
+        <div class="col-md-10">
+            <form class="form-inline" role="form" method="get" action="/admin/streamingreport/incoming_by_channel">
+                <div class="form-group">
+                    <label for="channel" class="control-label input-sm">Channel</label>
+                    <input type="text" name="channel" id="channel" class="form-control input-sm" value="<?=isset($filter['channel']) ? $filter['channel'] : ''?>">
+                </div>
+                <div class="form-group">
+                    <label for="from" class="control-label input-sm">From</label>
+                    <input type="text" class="form-control input-sm" id="from" name="from" value="">
+                </div>
+                <div class="form-group">
+                    <label for="to" class="control-label input-sm">To</label>
+                    <input type="text" class="form-control input-sm" id="to" name="to" value="">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Live Length (hours)</th>
+                    <th>Live Incoming</th>
+                    <th>Goods Incoming</th>
+                    <th>Total Incoming</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr>
+                        <td><?=$row['dt']?></td>
+                        <td><?=number_format($row['live_length'])?></td>
+                        <td><?=number_format($row['live_incoming'])?></td>
+                        <td><?=number_format($row['goods_incoming'])?></td>
+                        <td><?=number_format($row['live_incoming'] + $row['goods_incoming'])?></td>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#from").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#to").datepicker("option", "minDate", selectedDate);
+            }
+        });
+
+        $("#from").datepicker("setDate", "<?=isset($filter['from']) ? $filter['from'] : date('Y-m-d', strtotime('-7 day'))?>");
+
+        $("#to").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#from").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        $("#to").datepicker("setDate", "<?=isset($filter['to']) ? $filter['to'] : date('Y-m-d')?>");
+    });
+</script>

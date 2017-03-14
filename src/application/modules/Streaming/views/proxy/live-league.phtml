@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title><?= $channelInfo['title'] ? Misc::escape($channelInfo['title']) . ' - Nikksy' : 'Nikksy' ?></title>
+    <meta name="keywords" content="LOL,Turnuva,Ödül,Canlı Yayın,E-Spor">
+    <meta name="description" content="Her ay Nikksy tarafından düzenlenen, 10 Bin TL Ödüllü Lol Turnuvası">
+    <meta content="1560537774164405" property="fb:app_id">
+    <meta content="Nikksy" property="og:site_name">
+    <meta content="<?= $channelInfo['channel'] ?>" property="nikksy:channel">
+    <meta content="<?= Misc::escape($channelInfo['title']) ?>" property="og:title">
+    <meta content="Her ay Nikksy tarafından düzenlenen, 10 Bin TL Ödüllü Lol Turnuvası" property="og:description">
+    <meta content="<?= $channelInfo['avatar'] ? 'https://s3.nikksy.com/' . $channelInfo['avatar'] : '/images/default_avatar.png' ?>" property="og:image">
+    <meta content="website" property="og:type">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <base target="_blank"/>
+    <link rel="stylesheet" href="/uc/files/main.min.css">
+    <link rel="stylesheet" href="/kayit/css/main.min.css">
+    <script src="/js/require.js" data-main="/nikksy_league/js/config.live.min"></script>
+</head>
+<body type="live">
+<div class="wrap">
+    <div class="live-wrap">
+        <div class="nano">
+            <div class="nano-content">
+                <div class="top-nav"></div>
+                <nav class="nav-global">
+                    <a href="index.html" target="_self"><span class="home">Ana Sayfa</span></a>
+                    <a href="teams.html#top" target="_self"><span class="team">Takımlar</span></a>
+                    <a href="/nl_lol/1/video.html#top" target="_blank"><span class="video">Ocak'16</span></a>
+                    <a href="rules.html#top" target="_self"><span class="rule">Turnuva Kuralları</span></a>
+                </nav>
+                <div class="live-cont">
+                    <div class="who">
+                        <h1></h1>
+                    </div>
+                    <div class="video"></div>
+                    <div class="gifts-bar"><span class="views"></span></div>
+                    <p class="info"></p>
+                </div>
+                <footer>
+                    <div class="league-recommend group">
+                        <div class="cont group">
+                            <div class="logos"><div class="logo"></div></div>
+                            <div class="text">
+                                <strong>Nikksy League-League of Legends</strong>
+                                <p>Nikksy League-League of Legends (NL-LOL), Nikksy’nin ilk Büyük Ödüllü yarışmasıdır. </p>
+                                <p>Profesyonel ve devamlı E-Spor turnuvası eksikliğinin hissedildiği Türkiye’de, Nikksy League hem takımlara maddi destek sağlayacak, hem de yeni LOL yıldızları için benzersiz bir sahne olacak. </p>
+                                <p>Her ay düzenli bir şekilde gerçekleştirilecek Nikksy League’de hem üst düzey maçlarla kendinizi geliştirebilecek, hem de kendinizi ve takımınızı binlerce seyirciye tanıtabileceksiniz. </p>
+                                <p>Nikksy League’e site üzerinden takımınızla birlikte kayıt olun, başvurunuz kabul edildikten sonra turnuvaya katılmaya hak kazanın. Grup maçları, yarı final ve final maçlarında rakiplerinizi alt ederek 10 BİN TL’lik büyük ödülün sahibi olun. </p>
+                            </div>
+                        </div>
+                    </div>
+                    <p>Nikksy Platformu turnuvadaki tüm maçların canlı yayın hakkına ve video haklarına sahiptir, izleyiciler ve yarışmacılar izledikleri veya oynadıkları maçların yayınını yapamazlar, bu durum tespit edilirse, yayının yasal sorumluluğu yayını yapan kişiye aittir. </p>
+                </footer>
+            </div>
+        </div>
+    </div>
+    <div class="chat-room-wrap"></div>
+</div>
+</body>
+<script>
+    (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-57615257-1', 'auto');
+    ga('require', 'displayfeatures');
+    ga('send', 'pageview');
+</script>
+</html>

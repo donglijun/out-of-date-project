@@ -1,0 +1,79 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-4 col-md-5">
+            <div class="panel panel-default" style="margin: 60px auto;">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Sign in</h3>
+                </div>
+                <div class="panel-body">
+                    <form role="form" method="post" id="signinform">
+                        <input type="hidden" name="from" id="from" value="<?=isset($from) ? $from : ''?>" />
+                        <div class="form-group">
+                            <label for="name" class="control-label">Username</label>
+                            <input type="text" class="form-control" id="name" name="name" value="<?=isset($name) ? $name : ''?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="control-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" value="" />
+                        </div>
+                        <div class="form-group hidden" id="captcha_row">
+                            <label for="captcha_value" class="control-label sr-only">Captcha</label>
+                            <input type="text" class="form-control" id="captcha_value" name="captcha_value" value="" />
+                            <img src="" id="captcha_image">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-default">Sign in</button>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary btn-lg btn-block" id="connect_with_facebook">Connect with Facebook</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <pre id="result"></pre>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#username").focus();
+
+        $("#connect_with_facebook").click(function() {
+            window.location.href="/passport/connection/fb_login";
+        });
+
+        $("#captcha_image").click(function() {
+            $(this).attr("src", "").attr("src", "/captcha.php");
+        });
+
+        $("#signinform").submit(function() {
+            var name = $("#name").val(),
+                password = $("#password").val();
+
+            $.post(
+                '/passport/user/signin',
+                {
+                    name: name,
+                    password: password
+                },
+                function(res) {
+                    if (res.code == 200) {
+//                        window.location.href = '/passport/test/profile';
+                    } else {
+                        $("#captcha_image").attr("src", "").attr("src", "/captcha.php");
+                        $("#captcha_row").removeClass("hidden");
+                    }
+
+                    $("#result").text(JSON.stringify(res));
+                    alert(JSON.stringify(res));
+                },
+                'json'
+            );
+
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,82 @@
+<div class="container">
+    <h1 class="text-center">Edit Streaming Channel</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <form class="form-horizontal" role="form" method="post" action="/admin/streamingchannel/<?=$action?>">
+                <div class="form-group">
+                    <label for="id" class="col-sm-4 control-label"><?php if (isset($data['id'])) { ?>Channel ID<?php } else { ?>User's ID or Name<?php } ?></label>
+                    <div class="col-sm-8">
+                        <?php if (isset($data['id'])) { ?>
+                        <input type="hidden" name="id" id="id" value="<?=isset($id) ? $id : ''?>" />
+                        <p class="form-control-static"><?=isset($data['id']) ? $data['id'] : ''?></p>
+                        <?php } else { ?>
+                        <input type="text" class="form-control" id="id" name="id" value="">
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="title" class="col-sm-4 control-label">Title</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="title" name="title" value="<?=isset($data['title']) ? Misc::escape($data['title']) : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="is_signed" class="col-sm-4 control-label">Signed</label>
+                    <div class="col-sm-8">
+                        <input type="checkbox" name="is_signed" id="is-signed" value="1" <?=isset($data['is_signed']) && $data['is_signed'] ? 'checked="checked"' : ''?>>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="is_exclusive" class="col-sm-4 control-label">Exclusive</label>
+                    <div class="col-sm-8">
+                        <input type="checkbox" name="is_exclusive" id="is-exclusive" value="1" <?=isset($data['is_exclusive']) && $data['is_exclusive'] ? 'checked="checked"' : ''?>>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="class" class="col-sm-4 control-label">Class</label>
+                    <div class="col-sm-8">
+                        <select name="class" class="form-control input-sm">
+                            <?php foreach ($classes as $val) { ?>
+                                <option value="<?=$val['id']?>" <?=(isset($data['class']) && $val['id']==$data['class']) ? 'selected="selected"' : ''?>><?=Misc::escape($val['title'])?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="special" class="col-sm-4 control-label">Special</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="special" name="special" value="<?=isset($data['special']) ? Misc::escape($data['special']) : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="<?=$_SERVER['HTTP_REFERER'] ?: '/admin/streamingchannel/list'?>" class="btn btn-default">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $('#is-signed').click(function() {
+            var checked = $(this).prop("checked");
+
+            if (!checked) {
+                $("#is-exclusive").prop("checked", checked);
+            }
+        });
+
+
+        $('#is-exclusive').click(function() {
+            var checked = $(this).prop("checked");
+
+            if (checked) {
+                $("#is-signed").prop("checked", checked);
+            }
+        });
+    });
+</script>

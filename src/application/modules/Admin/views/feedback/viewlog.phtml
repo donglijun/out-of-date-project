@@ -1,0 +1,60 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th style="width: 30px;">#</th>
+                        <th style="width: 60px;">User</th>
+                        <th style="width: 50px;">Client</th>
+                        <th style="width: 50px;">Lang</th>
+                        <th style="">Description</th>
+                        <th style="width: 200px;">Translation</th>
+                        <th style="width: 200px;">Errors</th>
+                        <th style="width: 90px;">OS</th>
+                        <th style="width: 120px;">Created On</th>
+                        <th style="width: 160px;">Contact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="<?php if (empty($data['log_path'])) { ?>warning<?php } else if ($data['translation']) { ?>success<?php } ?>">
+                        <td><?=$data['id']?></td>
+                        <td><?=$data['user']?></td>
+                        <td><?=$data['client']?></td>
+                        <td><?=Misc::escape($data['lang'])?></td>
+                        <td>
+                            <div style="width: 190px; height:80px; overflow: auto;">
+                                <pre><?=Misc::escape($data['description'])?></pre>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="width: 190px; height:80px; overflow: auto;">
+                                <pre id="translation_<?=$data['id']?>" class="translation" data-title="<?=$data['translated_by'] ? 'Translated by ' . $data['translated_by'] . ' @ ' . date('Y-m-d H:i', $data['translated_on']) : ''?>"><?=Misc::escape($data['translation'])?></pre>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="width: 190px; height:80px; overflow: auto;">
+                                <pre id="errors_<?=$data['id']?>">
+                                    <?php foreach ($data['errors'] as $error) {
+                                        echo $error['times'] . ':' . $error['message'] . "\n";
+                                    } ?>
+                                </pre>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="os" data-title="<?=Misc::escape($data['os'])?>"><?=mb_substr(Misc::escape($data['os']), 0, 10)?></span>
+                        </td>
+                        <td>
+                            <?=date('Y-m-d H:i', $data['created_on'])?>
+                        </td>
+                        <td>
+                            <?=Misc::escape($data['contact_way'] . ':' . $data['contact_info'])?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br />
+    <pre><?=Misc::escape($data['logContent'])?></pre>
+</div>

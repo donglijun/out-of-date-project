@@ -1,0 +1,72 @@
+<div class="container">
+    <h1 class="text-center">Daily Total Gift</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-inline" role="form" method="get" action="/admin/gift/report_total">
+                <div class="form-group">
+                    <label for="from" class="control-label input-sm">From</label>
+                    <input type="text" class="form-control input-sm" id="from" name="from" value="">
+                </div>
+                <div class="form-group">
+                    <label for="to" class="control-label input-sm">To</label>
+                    <input type="text" class="form-control input-sm" id="to" name="to" value="">
+                </div>
+
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Collecting</th>
+                    <th>Giving</th>
+                    <th>Updated On</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr>
+                        <td><?=$row['date']?></td>
+                        <td><?=$row['collecting']?></td>
+                        <td><?=$row['giving']?></td>
+                        <td><?=$row['updated_on'] ? date('Y-m-d H:i', $row['updated_on']) : ''?></td>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+        $("#from").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#to").datepicker("option", "minDate", selectedDate);
+            }
+        });
+
+        $("#from").datepicker("setDate", "<?=isset($from) && $from ? $from : date('Y-m-d', strtotime('-1 day'))?>");
+
+        $("#to").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#from").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        $("#to").datepicker("setDate", "<?=isset($to) && $to ? $to : date('Y-m-d')?>");
+    });
+</script>

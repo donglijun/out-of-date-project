@@ -1,0 +1,107 @@
+<div class="container">
+    <h1 class="text-center">Time Cards</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <a href="/admin/timecard/import" id="btn-import" class="btn btn-primary">Import</a>
+        </div>
+        <div class="col-md-8">
+            <form class="form-inline" role="form" method="get" action="/admin/timecard/list">
+                <div class="form-group">
+                    <label for="code" class="control-label input-sm">Card Code</label>
+                    <input type="text" name="code" id="code" class="form-control input-sm" value="<?=isset($filter['code']) ? $filter['code'] : ''?>">
+                </div>
+                <div class="form-group">
+                    <label for="user" class="control-label input-sm">Consumed User</label>
+                    <input type="text" name="user" id="user" class="form-control input-sm" value="<?=isset($filter['user']) ? $filter['user'] : ''?>">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+        <div class="col-md-2">
+            <a href="/admin/timecardtype/list" id="btn-import" class="btn btn-primary">Card Types</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Code</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Created On</th>
+                    <th>Consumed On</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=Misc::escape(substr_replace($row['code'], '********', -8))?></td>
+                        <td><?=$row['type']?></td>
+                        <td><?=$row['status']?></td>
+                        <td><?=$row['created_on'] ? date('Y-m-d H:i', $row['created_on']) : ''?></td>
+                        <td><?=$row['consumed_on'] ? date('Y-m-d H:i', $row['consumed_on']) : ''?></td>
+                        <td>
+                            <a href="/admin/timecard/view?id=<?=$row['id']?>" target="_blank" class="btn btn-primary btn-sm">View</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<?php include Yaf_View_Simple::getScriptPath() . DIRECTORY_SEPARATOR . 'timecard' . DIRECTORY_SEPARATOR . 'modal-import.phtml'; ?>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $("#btn-import").click(function() {
+            $("#input-cards").val("");
+
+            $("#import-modal").modal("show");
+
+            return false;
+        });
+
+        $("#import-cards").click(function() {
+            var type = $("#input-card-type").val(),
+                cards = $("#input-cards").val();
+
+            $.post(
+                "/admin/timecard/import",
+                {
+                    type: type,
+                    cards: cards
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        window.alert("Import " + response.data.count + " cards.");
+                        window.location.reload();
+                    } else {
+                        window.alert("Failed");
+                    }
+                },
+                "json"
+            );
+
+            $("#import-modal").modal("hide");
+        });
+
+    });
+</script>

@@ -1,0 +1,29 @@
+<div class="container">
+    <h1 class="text-center">Publish Links To Columns</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4">
+            <?php if (!$ok) { ?>
+            <form class="form-horizontal" role="form" method="post" action="/admin/videolinkcolumn/publish">
+                <input type="hidden" name="links" id="links" value="<?=isset($links) ? $links : ''?>" />
+                <div class="form-group">
+                    <?php foreach ($columns as $column) { ?>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="columns" name="columns[]" value="<?=$column['id']?>"> <?=Misc::escape($column['name'])?>
+                        </label>
+                    </div>
+                    <?php } ?>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+            <?php } else { ?>
+                <a href="#" class="btn btn-default" onclick="window.close(); return false;">Close</a>
+            <?php } ?>
+        </div>
+    </div>
+</div>

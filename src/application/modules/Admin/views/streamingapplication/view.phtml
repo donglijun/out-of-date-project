@@ -1,0 +1,196 @@
+<div class="container">
+    <h1 class="text-center">View Application Info</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/streamingapplication/list" class="btn btn-primary">Applications</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <th>ID</th>
+                    <td><?=isset($data['id']) ? $data['id'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Channel ID</th>
+                    <td><?=isset($data['channel']) ? $data['channel'] : ''?> (<?=isset($data['user_name']) ? Misc::escape($data['user_name']) : ''?>)</td>
+                </tr>
+                <?php if (isset($data['app_type']) && ($data['app_type'] == MySQL_Streaming_ApplicationModel::APP_TYPE_SIGNED)) { ?>
+                <tr>
+                    <th>ID Photo Front</th>
+                    <td>
+                        <?php if (isset($data['id_photo_front_url'])) { ?>
+                        <img src="<?=$data['id_photo_front_url']?>" alt="">
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>ID Photo Back</th>
+                    <td>
+                        <?php if (isset($data['id_photo_back_url'])) { ?>
+                            <img src="<?=$data['id_photo_back_url']?>" alt="">
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <td><?=isset($data['name']) ? Misc::escape($data['name']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Phone</th>
+                    <td><?=isset($data['phone']) ? Misc::escape($data['phone']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Skype</th>
+                    <td><?=isset($data['skype']) ? Misc::escape($data['skype']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Twitch</th>
+                    <td><?=isset($data['twitch']) ? Misc::escape($data['twitch']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Facebook</th>
+                    <td><?=isset($data['facebook']) ? Misc::escape($data['facebook']) : ''?></td>
+                </tr>
+                <?php } ?>
+                <tr>
+                    <th>Memo</th>
+                    <td>
+                        <pre id="memo-<?=$data['id']?>"><?=isset($data['memo']) ? Misc::escape($data['memo']) : ''?></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Created On</th>
+                    <td><?=isset($data['created_on']) ? date('Y-m-d H:i:s', $data['created_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Type</th>
+                    <td>
+                        <?php if ($data['app_type'] == MySQL_Streaming_ApplicationModel::APP_TYPE_SIGNED) { ?>
+                            <span class="label label-primary">Signed</span>
+                        <?php } else if ($data['app_type'] == MySQL_Streaming_ApplicationModel::APP_TYPE_EXCLUSIVE) { ?>
+                            <span class="label label-info">Exclusive</span>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        <?php if ($data['app_status'] == MySQL_Streaming_ApplicationModel::APP_STATUS_PENDING) { ?>
+                            <span class="label label-default">Pending</span>
+
+                            <a href="/admin/streamingapplication/approve?id=<?=$data['id']?>" class="btn btn-info btn-sm btn-approve" data-id="<?=$data['id']?>">Approve</a>
+                            <a href="/admin/streamingapplication/deny?id=<?=$data['id']?>" class="btn btn-danger btn-sm btn-deny" data-id="<?=$data['id']?>">Deny</a>
+                        <?php } else if ($data['app_status'] == MySQL_Streaming_ApplicationModel::APP_STATUS_APPROVED) { ?>
+                            <span class="label label-success">Approved</span>
+                        <?php } else if ($data['app_status'] == MySQL_Streaming_ApplicationModel::APP_STATUS_DENIED) { ?>
+                            <span class="label label-danger">Denied</span>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Processed On</th>
+                    <td><?=isset($data['processed_on']) && $data['processed_on'] ? date('Y-m-d H:i:s', $data['processed_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Processed By</th>
+                    <td><?=isset($data['processed_by']) ? $data['processed_by'] : ''?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<?php include Yaf_View_Simple::getScriptPath() . DIRECTORY_SEPARATOR . 'streamingapplication' . DIRECTORY_SEPARATOR . 'modal-approve.phtml'; ?>
+
+<script>
+    $(function() {
+        $(".btn-approve").each(function() {
+//            $(this).click(function() {
+//                var btn = $(this),
+//                    id  = btn.data("id");
+//
+//                $("#approve-app-id").val(id + "");
+//
+//                $("#approve-modal").modal("show");
+//
+//                return false;
+//            });
+            $(this).click(function() {
+                if (window.confirm('Really approve???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/streamingapplication/approve",
+                        {
+                            id: id
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                window.alert(response.message);
+
+                                window.location.reload();
+                            } else {
+                                window.alert(response.message ? response.message : "Failed");
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+
+//        $("#submit-approve").click(function() {
+//            var app = $("#approve-app-id").val(),
+//                channel_class = $("#approve-channel-class").val();
+//
+//            $.post(
+//                "/admin/streamingapplication/approve",
+//                {
+//                    id: app,
+//                    class: channel_class
+//                },
+//                function(response) {
+//                    if (response.code == 200) {
+//                        window.alert(response.message);
+//
+//                        window.location.reload();
+//                    } else {
+//                        window.alert(response.message ? response.message : "Failed");
+//                    }
+//                },
+//                "json"
+//            );
+//
+//            $("#approve-modal").modal("hide");
+//        });
+
+        $(".btn-deny").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really deny???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/streamingapplication/deny",
+                        {
+                            id: id
+                        },
+                        function(response) {
+                            window.location.reload();
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+    });
+</script>

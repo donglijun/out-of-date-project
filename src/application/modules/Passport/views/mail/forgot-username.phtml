@@ -1,0 +1,9 @@
+Hi, <strong>here are the usernames you requested.</strong> <br />
+<br />
+Below are the usernames that have active NIKKSY accounts connected to the email address:
+<a href="mailto:<?=$email?>" target="_blank"><?=$email?></a> <br />
+<ul>
+    <?php foreach ($names as $name) { ?>
+    <li><?=$name?></li>
+    <?php } ?>
+</ul>

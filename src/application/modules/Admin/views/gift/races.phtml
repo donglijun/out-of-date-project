@@ -1,0 +1,96 @@
+<div class="container">
+    <h1 class="text-center">Gift Races</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <a href="#" class="btn btn-primary" id="new-race">New</a>
+        </div>
+        <div class="col-md-8">
+            &nbsp;
+        </div>
+        <div class="col-md-2">
+            &nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Created on</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=date('Y-m-d H:i:s', $row['from'])?></td>
+                        <td><?=date('Y-m-d H:i:s', $row['to'])?></td>
+                        <td><?=date('Y-m-d H:i', $row['created_on'])?></td>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<?php include Yaf_View_Simple::getScriptPath() . DIRECTORY_SEPARATOR . 'gift' . DIRECTORY_SEPARATOR . 'modal-race.phtml'; ?>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $("#new-race").click(function() {
+            var btn = $(this);
+
+            $("#from-date").val("<?=date('Y-m-d', strtotime("+1 hour"))?>");
+            $("#from-time").val("<?=date('H:00:00', strtotime("+1 hour"))?>");
+
+            $("#to-date").val("<?=date('Y-m-d', strtotime("+2 hour"))?>");
+            $("#to-time").val("<?=date('H:00:00', strtotime("+2 hour"))?>");
+
+            $("#race-modal").modal("show");
+
+            return false;
+        });
+
+        $("#save-race").click(function() {
+            $.post(
+                "/admin/gift/new_race",
+                {
+                    from_date: $("#from-date").val(),
+                    from_time: $("#from-time").val(),
+                    to_date: $("#to-date").val(),
+                    to_time: $("#to-time").val()
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        window.location.reload();
+                    } else {
+                        window.alert(response.message ? response.message : "Failed");
+                    }
+                },
+                "json"
+            );
+
+            $("#race-modal").modal("hide");
+        });
+    });
+</script>

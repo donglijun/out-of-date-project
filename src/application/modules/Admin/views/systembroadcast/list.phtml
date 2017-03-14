@@ -1,0 +1,97 @@
+<div class="container">
+    <h1 class="text-center">System Broadcasts</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <a href="/admin/systembroadcast/send" id="btn-send" class="btn btn-warning">Send Broadcast</a>
+        </div>
+        <div class="col-md-8">
+            &nbsp;
+        </div>
+        <div class="col-md-2">
+            &nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Body</th>
+                    <th>Target Channel</th>
+                    <th>Created On</th>
+                    <th>Created By</th>
+                    <th>
+                        &nbsp;
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td>
+                            <div style="width: 190px; height: 80px; overflow: auto;">
+                                <pre><?=Misc::escape($row['body'])?></pre>
+                            </div>
+                        </td>
+                        <td><?=$row['target_channel']?></td>
+                        <td><?=$row['created_on'] ? date('Y-m-d H:i', $row['created_on']) : ''?></td>
+                        <td><?=$row['created_by']?></td>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<?php include Yaf_View_Simple::getScriptPath() . DIRECTORY_SEPARATOR . 'systembroadcast' . DIRECTORY_SEPARATOR . 'modal-send.phtml'; ?>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $("#btn-send").click(function() {
+            $("#send-modal").modal("show");
+
+            return false;
+        });
+
+        $("#submit-send").click(function() {
+            var body = $("#send-body").val();
+
+            $.post(
+                "/admin/systembroadcast/send",
+                {
+                    body: body
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        window.alert(response.message);
+
+                        window.location.reload();
+                    } else {
+                        window.alert(response.message ? response.message : "Failed");
+                    }
+                },
+                "json"
+            );
+
+            $("#send-modal").modal("hide");
+        });
+    });
+</script>

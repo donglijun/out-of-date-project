@@ -1,0 +1,80 @@
+<div class="container">
+    <h1 class="text-center">View Withdraw Order Info</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/money/withdraw_orders" class="btn btn-primary">Withdraw Order List</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <th>Order ID</th>
+                    <td><?=isset($data['id']) ? $data['id'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>User ID</th>
+                    <td><?=isset($data['user']) ? $data['user'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <td><?=isset($data['dt']) ? $data['dt'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Live Length</th>
+                    <td><?=isset($data['live_length']) ? Misc::formatTimeLength($data['live_length']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Live Salary</th>
+                    <td><?=isset($data['live_salary']) ? ceil($data['live_salary']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Live Exclusive Bonus</th>
+                    <td><?=isset($data['live_exclusive_bonus']) ? ceil($data['live_exclusive_bonus']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Goods Golds</th>
+                    <td><?=isset($data['goods_golds']) ? ceil($data['goods_golds']) : 0?></td>
+                </tr>
+                <tr>
+                    <th>Goods Money</th>
+                    <td><?=isset($data['goods_money']) ? ceil($data['goods_money']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Total Money</th>
+                    <td><?=isset($data['total_money']) ? ceil($data['total_money']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Paypal</th>
+                    <td><?=isset($data['paypal']) ? Misc::escape($data['paypal']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        <?php if ($data['status'] == MySQL_Streaming_WithdrawOrderModel::STATUS_NEW) { ?>
+                            <span class="label label-default">New</span>
+                        <?php } else if ($data['status'] == MySQL_Streaming_WithdrawOrderModel::STATUS_COMPLETED) { ?>
+                            <span class="label label-success">Completed</span>
+                        <?php } else if ($data['status'] == MySQL_Streaming_WithdrawOrderModel::STATUS_CANCELED) { ?>
+                            <span class="label label-danger">Canceled</span>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Pay Money</th>
+                    <td><?=floatval($data['pay_money']) ? sprintf('$%.2f', $data['pay_money']) : '-'?></td>
+                </tr>
+                <tr>
+                    <th>Created On</th>
+                    <td><?=isset($data['created_on']) && $data['created_on'] ? date('Y-m-d H:i:s', $data['created_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Processed On</th>
+                    <td><?=isset($data['processed_on']) && $data['processed_on'] ? date('Y-m-d H:i:s', $data['processed_on']) : ''?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

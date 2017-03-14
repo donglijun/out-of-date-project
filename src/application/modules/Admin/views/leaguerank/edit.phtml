@@ -1,0 +1,168 @@
+<div class="container">
+    <h1 class="text-center">Edit League Rank</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <form class="form-horizontal" role="form" method="post" action="/admin/leaguerank/<?=$action?>" enctype="multipart/form-data">
+                <input type="hidden" name="id" id="id" value="<?=isset($id) ? $id : ''?>" />
+                <div class="form-group">
+                    <label for="season" class="col-sm-2 control-label">Season</label>
+                    <div class="col-sm-10">
+                        <select id="season" name="season" class="form-control input-sm">
+                            <?php foreach ($seasons as $key => $val) { ?>
+                                <option value="<?=$val['id']?>" <?=(isset($data['season']) && $val['id']==$data['season']) ? 'selected="selected"' : ''?>><?=Misc::escape($val['title'])?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="schedule" class="col-sm-2 control-label">Schedule</label>
+                    <div class="col-sm-10">
+                        <select id="schedule" name="schedule" class="form-control input-sm">
+                            <option value="0"></option>
+                            <?php foreach ($schedules as $key => $val) { ?>
+                                <option value="<?=$val['id']?>" <?=(isset($data['schedule']) && $val['id']==$data['schedule']) ? 'selected="selected"' : ''?>><?=Misc::escape($val['title'])?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="group_tag" class="col-sm-2 control-label">Group</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="group-tag" name="group_tag" value="<?=isset($data['group_tag']) ? $data['group_tag'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="team" class="col-sm-2 control-label">Team</label>
+                    <div class="col-sm-10">
+                        <select id="team" name="team" class="form-control input-sm">
+                            <option value="0"></option>
+                            <?php foreach ($teamTitles as $key => $val) { ?>
+                                <option value="<?=$key?>" <?=(isset($data['team']) && $key==$data['team']) ? 'selected="selected"' : ''?>><?=Misc::escape($val)?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="wins" class="col-sm-2 control-label">Wins</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="wins" name="wins" value="<?=isset($data['wins']) ? $data['wins'] : 0?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="loses" class="col-sm-2 control-label">Loses</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="loses" name="loses" value="<?=isset($data['loses']) ? $data['loses'] : 0?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="k" class="col-sm-2 control-label">Kill</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="k" name="k" value="<?=isset($data['k']) ? $data['k'] : 0?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="d" class="col-sm-2 control-label">Death</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="d" name="d" value="<?=isset($data['d']) ? $data['d'] : 0?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="a" class="col-sm-2 control-label">Assist</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="a" name="a" value="<?=isset($data['a']) ? $data['a'] : 0?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="points" class="col-sm-2 control-label">Points</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="points" name="points" value="<?=isset($data['points']) ? $data['points'] : 0?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="rank" class="col-sm-2 control-label">Rank</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="rank" name="rank" value="<?=isset($data['rank']) ? $data['rank'] : 0?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="/admin/leaguerank/list" class="btn btn-default">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        function update_schedules()
+        {
+            var season = $("#season").val();
+
+            $("#schedule").empty();
+
+            $.get(
+                '/admin/leaguematch/get_schedules_by_season',
+                {
+                    season: season
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        var data = response.data,
+                            output = [];
+
+                        output.push('<option value="0"></option>');
+                        for (var key in response.data) {
+//                            var option = $("<option>").val(data[key].id).text(data[key].title);
+                            output.push('<option value="'+ data[key].id +'">'+ data[key].title +'</option>');
+                        }
+
+                        $("#schedule").append(output.join(''));
+                    }
+                },
+                'json'
+            );
+        }
+
+        function update_teams()
+        {
+            var season = $("#season").val();
+
+            $("#team").empty();
+
+            $.get(
+                '/admin/leaguematch/get_teams_by_season',
+                {
+                    season: season
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        var data = response.data,
+                            output = [];
+
+                        output.push('<option value="0"></option>');
+                        for (var key in response.data) {
+                            output.push('<option value="'+ data[key].id +'">'+ data[key].title +'</option>');
+                        }
+
+                        $("#team").append(output.join(''));
+                    }
+                },
+                'json'
+            );
+        }
+
+        $("#season").change(function() {
+            update_schedules();
+
+            update_teams();
+        });
+
+        <?php if (!isset($id)) { ?>
+        $("#season").change();
+        <?php } ?>
+    });
+</script>

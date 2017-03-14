@@ -1,0 +1,120 @@
+<div class="container">
+    <h1 class="text-center">Reported List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            &nbsp;
+        </div>
+        <div class="col-md-6">
+            <form class="form-inline" role="form" method="get" action="/admin/reported/list">
+                <div class="form-group">
+                    <label for="status" class="control-label input-sm">Status</label>
+                    <select name="status" class="form-control input-sm">
+                        <option value="">All</option>
+                        <option value="<?=MySQL_Mkjogo_ReportedModel::STATUS_NEW?>" <?=isset($filter['status']) && ($filter['status'] == MySQL_Mkjogo_ReportedModel::STATUS_NEW) ? 'selected="selected"' : ''?>>New</option>
+                        <option value="<?=MySQL_Mkjogo_ReportedModel::STATUS_RESOLVED?>" <?=isset($filter['status']) && ($filter['status'] == MySQL_Mkjogo_ReportedModel::STATUS_RESOLVED) ? 'selected="selected"' : ''?>>Resolved</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <form class="form-inline" role="form" id="quickAddBadword">
+                <div class="form-group">
+                    <input type="text" name="content" id="content" class="form-control input-sm" value="" data-toggle="tooltip" data-placement="top">
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm">Add Badword</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>Module</th>
+                    <th>Type</th>
+                    <th>Target</th>
+                    <th>Content</th>
+                    <th>Author</th>
+                    <th>Reason</th>
+                    <th>Reported By</th>
+                    <th>Status</th>
+                    <th>Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=Misc::escape($row['module'])?></td>
+                        <td><?=Misc::escape($row['type'])?></td>
+                        <td><?=$row['target']?></td>
+                        <td>
+                            <div style="width: 240px; height:80px; overflow: auto;">
+                                <pre><?=Misc::escape($row['content'])?></pre>
+                            </div>
+                        </td>
+                        <td><?=Misc::escape($row['user_name'])?></td>
+                        <td>
+                            <div style="width: 240px; height:80px; overflow: auto;">
+                                <pre><?=Misc::escape($row['reason'])?></pre>
+                            </div>
+                        </td>
+                        <td><?=Misc::escape($row['reporter_name'])?></td>
+                        <td><?=$row['status'] == MySQL_Mkjogo_ReportedModel::STATUS_RESOLVED ? 'Resolved' : 'New'?></td>
+                        <td>
+                            <?php if ($row['status'] == MySQL_Mkjogo_ReportedModel::STATUS_NEW) { ?>
+                            <a href="/admin/reported/resolve?id=<?=$row['id']?>" class="btn btn-primary btn-sm">Resolve</a>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#quickAddBadword").submit(function() {
+        var content = $("#content").val();
+        var timer;
+
+        if (content) {
+            $.post(
+                '/admin/badword/quickadd',
+                {
+                    content: content
+                },
+                function(response) {
+                    $("#content").val("").focus();
+
+                    clearTimeout(timer);
+                    $("#content").tooltip("destroy");
+
+                    $("#content").tooltip({
+                        delay: {
+                            show: 100,
+                            hide: 500
+                        },
+                        trigger: "manual",
+                        title: "Add new bad word '" + content + "'"
+                    }).on("shown.bs.tooltip", function() {
+                        timer = setTimeout(function() {
+                            $("#content").tooltip("destroy");
+                        }, 2000);
+                    });
+                    $("#content").tooltip("show");
+                },
+                "json"
+            );
+        }
+
+        return false;
+    });
+</script>

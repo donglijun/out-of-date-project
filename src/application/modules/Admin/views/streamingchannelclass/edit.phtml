@@ -1,0 +1,47 @@
+<div class="container">
+    <h1 class="text-center">Edit Channel Class</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <form class="form-horizontal" role="form" method="post" action="/admin/streamingchannelclass/<?=$action?>" enctype="multipart/form-data">
+                <input type="hidden" name="id" id="id" value="<?=isset($id) ? $id : ''?>" />
+                <div class="form-group">
+                    <label for="level" class="col-sm-2 control-label">Level</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="level" name="level" value="<?=isset($data['level']) ? $data['level'] : 0?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="title" class="col-sm-2 control-label">Title</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="title" name="title" value="<?=isset($data['title']) ? Misc::escape($data['title']) : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="hourly_pay" class="col-sm-2 control-label">Hourly Pay</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="hourly-pay" name="hourly_pay" value="<?=isset($data['hourly_pay']) ? $data['hourly_pay'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exclusive_bonus" class="col-sm-2 control-label">Exclusive Bonus</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="exclusive-bonus" name="exclusive_bonus" value="<?=isset($data['exclusive_bonus']) ? $data['exclusive_bonus'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="withdraw_rate" class="col-sm-2 control-label">Withdraw Rate</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="withdraw-rate" name="withdraw_rate" value="<?=isset($data['withdraw_rate']) ? $data['withdraw_rate'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="/admin/streamingchannelclass/list" class="btn btn-default">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

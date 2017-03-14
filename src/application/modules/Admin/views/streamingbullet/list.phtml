@@ -1,0 +1,138 @@
+<div class="container">
+    <h1 class="text-center">Highlight Bullet List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" class="multi-select" name="selectAll" id="selectAll"></th>
+                    <th>ID</th>
+                    <th>Highlight</th>
+                    <th>Author</th>
+                    <th>Body</th>
+                    <th>Track</th>
+                    <th>IP</th>
+                    <th>Created on</th>
+                    <th>
+                        <button type="button" class="btn btn-danger btn-sm" id="btn-delete-multi">Batch Delete</button>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><input type="checkbox" class="multi-select" name="ids" value="1" data-id="<?=$row['id']?>"></td>
+                        <td><?=$row['id']?></td>
+                        <td><a href="/admin/streamingbullet/listbyhighlight?highlight=<?=$row['highlight']?>"><?=$row['highlight']?></a></td>
+                        <td>
+                            <?=Misc::escape($row['author_name'])?> &nbsp;
+                            <a href="/admin/streamingbullet/deletebyauthor?author=<?=$row['author']?>" class="btn btn-danger btn-sm btn-delete-by-author" data-author="<?=$row['author']?>">Clear All</a>
+                        </td>
+                        <td><?=Misc::escape($row['body'])?></td>
+                        <td><?=$row['track']?></td>
+                        <td><?=$row['ip']?></td>
+                        <td><?=date('Y-m-d H:i', $row['created_on'])?></td>
+                        <td>
+                            <a href="/admin/streamingbullet/delete?ids=<?=$row['id']?>" class="btn btn-danger btn-sm btn-delete" data-id="<?=$row['id']?>">Delete</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $(".btn-delete").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/streamingbullet/delete",
+                        {
+                            ids: id
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                $("#row-" + id).remove();
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+
+        $("#btn-delete-multi").click(function() {
+            if (window.confirm('Really delete all selected???')) {
+                var ids = "";
+                $("[name='ids']").each(function () {
+                    if ($(this).prop("checked") == true) {
+                        ids += ids ? ',' + $(this).data("id") : $(this).data("id");
+                    }
+                });
+
+                if (ids) {
+                    $.post(
+                        "/admin/streamingbullet/delete",
+                        {
+                            ids: ids
+                        },
+                        function (response) {
+                            if (response.code == 200) {
+                                $("[name='ids']").each(function () {
+                                    if ($(this).prop("checked") == true) {
+                                        $("#row-" + $(this).data("id")).remove();
+                                    }
+                                });
+                            }
+                        },
+                        "json"
+                    );
+                }
+            }
+        });
+
+        $(".btn-delete-by-author").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really???')) {
+                    var btn     = $(this),
+                        author  = btn.data("author");
+
+                    $.post(
+                        "/admin/streamingbullet/deletebyauthor",
+                        {
+                            author: author
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                window.location.reload();
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+    });
+</script>

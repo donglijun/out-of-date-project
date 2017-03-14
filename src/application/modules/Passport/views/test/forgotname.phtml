@@ -1,0 +1,53 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-4 col-md-5">
+            <div class="panel panel-default" style="margin: 60px auto;">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Forgot username</h3>
+                </div>
+                <div class="panel-body">
+                    <form role="form" method="post" id="forgotform">
+                        <div class="form-group">
+                            <label for="email" class="control-label">Email</label>
+                            <input type="text" class="form-control" id="email" name="email" value="<?=isset($email) ? $email : ''?>">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-default">Send Username</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <pre id="result"></pre>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#email").focus();
+
+        $("#forgotform").submit(function() {
+            var email = $("#email").val();
+
+            $.post(
+                '/passport/user/forgot_username',
+                {
+                    email: email
+                },
+                function(res) {
+                    if (res.code == 200) {
+//                        window.location.href = '/passport/test/profile';
+                    }
+
+                    $("#result").text(JSON.stringify(res));
+                    alert(JSON.stringify(res));
+                },
+                'json'
+            );
+
+            return false;
+        });
+    });
+</script>

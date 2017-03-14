@@ -1,0 +1,94 @@
+<div class="container">
+    <h1 class="text-center">Edit Deck</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <form class="form-horizontal" role="form" method="post" action="/admin/deck/<?=$action?>">
+                <input type="hidden" name="deck" id="deck" value="<?=isset($deck) ? $deck : ''?>" />
+                <div class="form-group">
+                    <label for="user" class="col-sm-2 control-label">User</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static"><?=isset($data['user']) ? $data['user'] : ''?></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="title" class="col-sm-2 control-label">Title</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="title" name="title" value="<?=isset($data['title']) ? Misc::escape($data['title']) : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="game_version" class="col-sm-2 control-label">Game Version</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="game_version" name="game_version" value="<?=isset($data['game_version']) ? $data['game_version'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="category" class="col-sm-2 control-label">Category</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="category" name="category" value="<?=isset($data['category']) ? $data['category'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="class" class="col-sm-2 control-label">Class</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="class" name="class" value="<?=isset($data['class']) ? $data['class'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="lang" class="col-sm-2 control-label">Lang</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="lang" name="lang" value="<?=isset($data['lang']) ? $data['lang'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cards" class="col-sm-2 control-label">Cards</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" id="cards" name="cards" rows="30"><?=isset($data['cards']) ? $data['cards'] : ''?></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="is_public" class="col-sm-2 control-label">Public</label>
+                    <div class="col-sm-10">
+                        <label class="radio-inline">
+                            <input type="radio" id="is-public-yes" name="is_public" value="1" <?php if ($data['is_public']) {?>checked="checked"<?php } ?>> Yes
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" id="is-public-no" name="is_public" value="0" <?php if (!$data['is_public']) {?>checked="checked"<?php } ?>> No
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="source" class="col-sm-2 control-label">Source</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="source" name="source" value="<?=isset($data['source']) ? Misc::escape($data['source']) : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="source-url" class="col-sm-2 control-label">Source URL</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="source-url" name="source_url" value="<?=isset($data['source_url']) ? Misc::escape($data['source_url']) : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="author" class="col-sm-2 control-label">Author</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="author" name="author" value="<?=isset($data['author']) ? Misc::escape($data['author']) : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="description" class="col-sm-2 control-label">Description</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" id="description" name="description" rows="30"><?=isset($data['description']) ? Misc::escape($data['description']) : ''?></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-10">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="/admin/deck/list" class="btn btn-default">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

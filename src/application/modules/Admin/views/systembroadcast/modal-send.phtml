@@ -1,0 +1,26 @@
+<div class="modal fade" id="send-modal" tabindex="-1" role="dialog" aria-labelledby="send" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Send System Broadcast</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="send-target" class="control-label">Target Channel:</label>
+                        <input type="text" class="form-control input-sm" id="send-target" name="send-target" readonly="readonly" value="all">
+                    </div>
+                    <div class="form-group">
+                        <label for="send-body" class="control-label">Body:</label>
+                        <textarea id="send-body" name="send-body" class="form-control" rows="4"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submit-send">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>

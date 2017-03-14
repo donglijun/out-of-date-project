@@ -1,0 +1,275 @@
+<header class="navbar navbar-inverse navbar-fixed-top" role="banner">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/admin" class="navbar-brand">NIKKSY</a>
+        </div>
+        <nav class="collapse navbar-collapse" role="navigation">
+            <?php if (isset(Yaf_Session::getInstance()->admin)) { ?>
+                <ul class="nav navbar-nav nav-pills">
+                    <?php if (Yaf_Session::getInstance()->admin['group'] <= MySQL_AdminAccountModel::GROUP_ASSISTANT_ADMIN) { ?>
+                        <?php if (Yaf_Session::getInstance()->admin['group'] <= MySQL_AdminAccountModel::GROUP_SUPER_ADMIN) { ?>
+                        <li class="dropdown">
+                            <a id="dropdown-menu-administration" class="dropdown-toggle" data-toggle="dropdown" href="#administration">Administration <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown-menu-administration">
+                                <li>
+                                    <a href="/admin/account/list">Account</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/log/list">Log</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <?php } ?>
+                        <li>
+                            <a id="dropdown-menu-account" class="dropdown-toggle" data-toggle="dropdown" href="#account">User <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown-menu-account">
+                                <li>
+                                    <a href="/admin/user/list">List</a>
+                                </li>
+                                <li class="dropdown-header">Charts</li>
+                                <li>
+                                    <a href="/admin/report/summary">Summary</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Registration</li>
+                                <li>
+                                    <a href="/admin/report/regdaily">Daily</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/report/regweekly">Weekly</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/report/regmonthly">Monthly</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Active Users</li>
+                                <li>
+                                    <a href="/admin/report/dau">Daily</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/report/mau">Monthly</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a id="dropdown-menu-video" class="dropdown-toggle" data-toggle="dropdown" href="#video">Video <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown-menu-video">
+                                <li class="dropdown-header">Link</li>
+                                <li>
+                                    <a href="/admin/videolink/list">List</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Comment</li>
+                                <li>
+                                    <a href="/admin/videocomment/list">List</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Bullet</li>
+                                <li>
+                                    <a href="/admin/videobullet/list">List</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Tag</li>
+                                <li>
+                                    <a href="/admin/videotaggroup/list">Group List</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/videotag/list">List</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Column</li>
+                                <li>
+                                    <a href="/admin/videocolumn/list">Column List</a>
+                                    <a href="/admin/videolinkcolumn/list">Link List</a>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php } ?>
+                    <?php if (Yaf_Session::getInstance()->admin['group'] <= MySQL_AdminAccountModel::GROUP_DIRECTOR) { ?>
+                        <li>
+                            <a id="dropdown-menu-streaming" class="dropdown-toggle" data-toggle="dropdown" href="#streaming">Streaming <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown-menu-streaming">
+                                <li class="dropdown-header">Channel</li>
+                                <li>
+                                    <a href="/admin/streamingchannel/list">List</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/streamingchannel/times">Live Times</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/streamingchannel/lengths">Live Lengths</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/streamingchannel/watching_lengths">Watching Lengths</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/streamingsupervisor/list">Supervisor</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/streamingeditor/list">Editor</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/streamingblacklist/list">Blacklist</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/streamingbroadcast/list">Broadcast</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/streamingbroadcasthighlight/list">Broadcast Highlight</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/streamingchannelclass/list">Class</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/streamingwatchingtask/list">Watching Task</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/streamingapplication/list">Application</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/streamingrequest/list">Show Image Request</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/streamingreport/length">Length Report</a>
+                                </li>
+                                <?php if (Yaf_Session::getInstance()->admin['group'] <= MySQL_AdminAccountModel::GROUP_ADMIN) { ?>
+                                <li>
+                                    <a href="/admin/streamingreport/incoming_by_class">Incoming Report</a>
+                                </li>
+                                <?php } ?>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Column</li>
+                                <li>
+                                    <a href="/admin/streamingcolumn/list">List</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/streamingcolumnitem/list">Items</a>
+                                </li>
+                                <?php if (Yaf_Session::getInstance()->admin['group'] <= MySQL_AdminAccountModel::GROUP_ADMIN) { ?>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Campaign</li>
+                                <li>
+                                    <a href="/admin/streamingcampaign/query">Result</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Server</li>
+                                <li>
+                                    <a href="/admin/streamingserver/list">List</a>
+                                </li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                        <li>
+                            <a id="dropdown-menu-wallet" class="dropdown-toggle" data-toggle="dropdown" href="#wallet">Wallet <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown-menu-wallet">
+                                <?php if (Yaf_Session::getInstance()->admin['group'] <= MySQL_AdminAccountModel::GROUP_ADMIN) { ?>
+                                <li class="dropdown-header">Goods</li>
+                                <li>
+                                    <a href="/admin/goods/list">List</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Gold</li>
+                                <?php if (Yaf_Session::getInstance()->admin['group'] <= MySQL_AdminAccountModel::GROUP_SUPER_ADMIN) { ?>
+                                <li>
+                                    <a href="/admin/gold/list">Account</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/goldpackage/list">Package</a>
+                                </li>
+                                <?php } ?>
+                                <li>
+                                    <a href="/admin/gold/recharge_orders">Recharge Orders</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Money</li>
+                                <li>
+                                    <a href="/admin/money/withdraw_orders">Withdraw Orders</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Time Card</li>
+                                <li>
+                                    <a href="/admin/timecard/list">List</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/timecardrequest/list">Exchange Request</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Gift</li>
+                                <li>
+                                    <a href="/admin/gift/list">Account</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/gift/growth_schemes">Growth Schemes</a>
+                                </li>
+                                <?php } ?>
+                                <?php if (Yaf_Session::getInstance()->admin['group'] <= MySQL_AdminAccountModel::GROUP_ASSISTANT_ADMIN) { ?>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Point</li>
+                                <li>
+                                    <a href="/admin/point/list">Account</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/point/log">Log</a>
+                                </li>
+                                <?php } ?>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Red</li>
+                                <li>
+                                    <a href="/admin/red/list">List</a>
+                                    <a href="/admin/red/log">Log</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a id="dropdown-menu-league" class="dropdown-toggle" data-toggle="dropdown" href="#league">League <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown-menu-league">
+                                <li>
+                                    <a href="/admin/leagueseason/list">Season</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/leagueapplication/list">Application</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/leaguematchschedule/list">Match Schedule</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/leaguematch/list">Match</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/leaguerank/list">Rank</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a id="dropdown-menu-misc" class="dropdown-toggle" data-toggle="dropdown" href="#misc">Misc <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown-menu-misc">
+                                <li>
+                                    <a href="/admin/badword/list">Badword</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="/admin/reported/list">Report</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="/admin/game/list">Game</a>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php } ?>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/admin/account/signout">Logout</a>
+                    </li>
+                </ul>
+            <?php } ?>
+        </nav>
+    </div>
+</header>

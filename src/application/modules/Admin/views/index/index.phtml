@@ -1,0 +1,148 @@
+<div class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Welcome, <?=Misc::escape(Yaf_Session::getInstance()->admin['name'])?></h3>
+        </div>
+        <div class="panel-body">
+            <?php if (Yaf_Session::getInstance()->admin['last_login_on']) { ?>
+            You last signed in from <b><?=Yaf_Session::getInstance()->admin['last_login_ip']?></b> at <b><?=date('Y-m-d H:i', Yaf_Session::getInstance()->admin['last_login_on'])?></b> (Timezone: <b><?=date_default_timezone_get()?></b>).
+            <?php } else { ?>
+                <p>This is your first signin.</p>
+            <?php } ?>
+        </div>
+    </div>
+    <?php if (Yaf_Registry::get('config')->front->domain == 'just-do-it.lnplay.com') { ?>
+    <div class="row">
+        <div class="col-md-4 col-sm-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Feedback</h3>
+                </div>
+                <div class="panel-body">
+                    <p>Today there are <a href="/admin/feedback/summary?from=<?=date('Y-m-d')?>&to=<?=date('Y-m-d', strtotime('+1 day'))?>" class="alert-link" id="feedback-today-total">?</a> new feedback.</p>
+                </div>
+                <table class="table" id="feedback-today-untranslated-by-lang">
+                    <thead>
+                    <th>Lang</th>
+                    <th>Today untranslated items</th>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <?php if (Yaf_Session::getInstance()->admin['group'] <= MySQL_AdminAccountModel::GROUP_ADMIN) { ?>
+        <div class="col-md-4 col-sm-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">MK User</h3>
+                </div>
+                <table class="table">
+                    <thead>
+                    <th>Item</th>
+                    <th>Count</th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Total Users</td>
+                        <td id="user-total">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>Today New Users</td>
+                        <td id="user-today-new">&nbsp;</td>
+                    </tr>
+                    <!--tr>
+                        <td>Today Active Users</td>
+                        <td id="user-today-active">&nbsp;</td>
+                    </tr-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Deck</h3>
+                </div>
+                <table class="table">
+                    <thead>
+                    <th>Item</th>
+                    <th>Count</th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Total Decks</td>
+                        <td id="deck-total">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>Today New Decks</td>
+                        <td id="deck-today-new">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>Total Recommended Decks</td>
+                        <td id="deck-total-recommended">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>Today New Recommended Decks</td>
+                        <td id="deck-today-new-recommended">&nbsp;</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <?php } ?>
+    </div>
+    <?php } ?>
+</div>
+
+<script>
+    $(function() {
+        // Notice feedback
+        $.get(
+            '/admin/feedback/today',
+            function(response) {
+                if (response) {
+                    $('#feedback-today-total').text(response.data.today_total);
+
+                    var untranslated = response.data.untranslated,
+                        tr = "",
+                        href = "";
+                    for (i in untranslated) {
+                        href = "/admin/feedback/list?lang=" + untranslated[i].lang + "&from=" + response.data.from + "&to=" + response.data.to;
+                        tr = "<tr><td>" + untranslated[i].lang + "</td><td><a href='" + href + "'>" + untranslated[i].count + "</a></td></tr>";
+                        $('#feedback-today-untranslated-by-lang').append(tr);
+                    }
+                }
+            },
+            'json'
+        );
+
+        <?php if (Yaf_Session::getInstance()->admin['group'] <= MySQL_AdminAccountModel::GROUP_ADMIN) { ?>
+        // Notice user
+        $.get(
+            '/admin/mkuser/today',
+            function(response) {
+                if (response) {
+                    $('#user-total').text(response.data.total);
+                    $('#user-today-new').text(response.data.today_new);
+                    $('#user-today-active').text(response.data.today_active);
+                }
+            },
+            'json'
+        );
+
+        // Notice deck
+        $.get(
+            '/admin/deck/today',
+            function(response) {
+                if (response) {
+                    $('#deck-total').text(response.data.total_decks);
+                    $('#deck-today-new').text(response.data.today_new_decks);
+                    $('#deck-total-recommended').text(response.data.total_recommended);
+                    $('#deck-today-new-recommended').text(response.data.today_new_recommended);
+                }
+            },
+            'json'
+        );
+        <?php } ?>
+    });
+</script>

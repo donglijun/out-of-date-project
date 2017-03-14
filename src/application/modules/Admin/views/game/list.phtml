@@ -1,0 +1,74 @@
+<div class="container">
+    <h1 class="text-center">Game List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <a href="/admin/game/create" class="btn btn-primary">Add</a>
+        </div>
+        <div class="col-md-8">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Abbr</th>
+                    <th>Icon</th>
+                    <th>Logo</th>
+                    <th>Created on</th>
+                    <th>Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=Misc::escape($row['name'])?></td>
+                        <td><?=Misc::escape($row['abbr'])?></td>
+                        <td><?php if ($row['icon']) { ?><img src="https://s3.nikksy.com/<?=$row['icon']?>" class="img-thumbnail" alt="#"><?php } ?></td>
+                        <td><?php if ($row['logo']) { ?><img src="https://s3.nikksy.com/<?=$row['logo']?>" class="img-thumbnail" alt="#"><?php } ?></td>
+                        <td><?=date('Y-m-d H:i', $row['created_on'])?></td>
+                        <td>
+                            <a href="/admin/game/update?id=<?=$row['id']?>" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="/admin/game/delete?ids=<?=$row['id']?>" class="btn btn-danger btn-sm btn-delete" data-id="<?=$row['id']?>">Delete</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $(".btn-delete").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/game/delete",
+                        {
+                            ids: id
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                $("#row-" + id).remove();
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+    });
+</script>

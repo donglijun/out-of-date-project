@@ -1,0 +1,101 @@
+<div class="container">
+    <h1 class="text-center">Streaming Server List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <a href="/admin/streamingserver/create" class="btn btn-primary">New</a>
+        </div>
+        <div class="col-md-8">
+            &nbsp;
+        </div>
+        <div class="col-md-2">
+            <a href="/admin/streamingserver/updatecache" class="btn btn-warning" id="update-cache">Update Cache</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>IP</th>
+                    <th>Port</th>
+                    <th>Weight</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=Misc::escape($row['name'])?></td>
+                        <td><?=Misc::escape($row['ip'])?></td>
+                        <td><?=Misc::escape($row['port'])?></td>
+                        <td><?=$row['weight']?></td>
+                        <td>
+                            <a href="/admin/streamingserver/update?id=<?=$row['id']?>" class="btn btn-primary btn-sm">Edit</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#update-cache").click(function() {
+            $.post(
+                "/admin/streamingserver/updatecache",
+                {},
+                function(response) {
+                    if (response.code == 200) {
+                        window.alert('OK');
+                    } else {
+                        window.alert("Failed");
+                    }
+                },
+                "json"
+            );
+
+            return false;
+        });
+
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $(".btn-delete").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/streamingserver/delete",
+                        {
+                            ids: id
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                $("#row-" + id).remove();
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+    });
+</script>

@@ -1,0 +1,101 @@
+<div class="container">
+    <h1 class="text-center">Recommended List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-inline" role="form" method="get" action="/admin/recommended/list">
+                <div class="form-group">
+                    <label for="lang" class="control-label input-sm">Lang</label>
+                    <input type="text" class="form-control input-sm" id="lang" name="lang" value="<?=isset($filter['lang']) ? $filter['lang'] : ''?>" />
+                </div>
+                <div class="form-group">
+                    <label for="class" class="control-label input-sm">Class</label>
+                    <input type="text" class="form-control input-sm" id="class" name="class" value="<?=isset($filter['class']) ? $filter['class'] : ''?>" />
+                </div>
+                <div class="form-group">
+                    <label for="category" class="control-label input-sm">Category</label>
+                    <input type="text" class="form-control input-sm" id="category" name="category" value="<?=isset($filter['category']) ? $filter['category'] : ''?>" />
+                </div>
+                <div class="form-group">
+                    <label for="deck" class="control-label input-sm">Deck</label>
+                    <input type="text" class="form-control input-sm" id="deck" name="deck" value="<?=isset($filter['deck']) ? $filter['deck'] : ''?>" />
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Lang</th>
+                    <th>Class</th>
+                    <th>Category</th>
+                    <th>Deck</th>
+                    <th>User</th>
+                    <th>Ranking</th>
+                    <th>Summary</th>
+                    <th>Created on</th>
+                    <th>Modified on</th>
+                    <th>Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=$row['lang']?></td>
+                        <td><?=$row['class']?></td>
+                        <td><?=$row['category']?></td>
+                        <td><a href="/admin/deck/view?deck=<?=$row['deck']?>"><?=$row['title'] ? $row['title'] : $row['deck']?></a></td>
+                        <td><?=$row['user']?></td>
+                        <td><?=$row['ranking']?></td>
+                        <td><?=Misc::escape($row['summary'])?></td>
+                        <td><?=date('Y-m-d H:i', $row['created_on'])?></td>
+                        <td><?=date('Y-m-d H:i', $row['modified_on'])?></td>
+                        <td>
+                            <a href="/admin/recommended/update?id=<?=$row['id']?>" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="/admin/recommended/delete?ids=<?=$row['id']?>" class="btn btn-danger btn-sm btn-delete" data-id="<?=$row['id']?>">Delete</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $(".btn-delete").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really???')) {
+                    var btn             = $(this),
+                        recommended_id  = btn.data("id");
+
+                    $.post(
+                        "/admin/recommended/delete",
+                        {
+                            ids: recommended_id
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                $("#row-" + recommended_id).remove();
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+    });
+</script>

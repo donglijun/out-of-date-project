@@ -1,0 +1,406 @@
+<div class="container">
+    <h1 class="text-center">Streaming Length Report</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-9 col-sm-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label for="daily-length-channel" class="control-label input-sm">Channel ID</label>
+                            <input type="text" name="daily-length-channel" id="daily-length-channel" class="form-control input-sm" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="daily-length-from" class="control-label input-sm">From</label>
+                            <input type="text" class="form-control input-sm" id="daily-length-from" name="daily-length-from" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="daily-length-to" class="control-label input-sm">To</label>
+                            <input type="text" class="form-control input-sm" id="daily-length-to" name="daily-length-to" value="">
+                        </div>
+                        <button type="button" class="btn btn-default btn-sm" id="submit-daily-length">Query</button>
+                    </form>
+                </div>
+                <div class="panel-body" id="chart-daily-length">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Data</h3>
+                </div>
+                <div class="panel-body">
+                    <textarea id="memo-daily-length" name="memo-daily-length" class="form-control" rows="20" readonly="readonly"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-9 col-sm-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label for="daily-top-n-from" class="control-label input-sm">Day</label>
+                            <input type="text" class="form-control input-sm" id="daily-top-n-from" name="daily-top-n-from" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="daily-top-n-limit" class="control-label input-sm">Limit</label>
+                            <input type="text" name="daily-top-n-limit" id="daily-top-n-limit" class="form-control input-sm" value="10">
+                        </div>
+                        <button type="button" class="btn btn-default btn-sm" id="submit-daily-top-n">Query</button>
+                    </form>
+                </div>
+                <div class="panel-body" id="chart-daily-top-n">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Data</h3>
+                </div>
+                <div class="panel-body">
+                    <textarea id="memo-daily-top-n" name="memo-daily-top-n" class="form-control" rows="20" readonly="readonly"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-9 col-sm-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label for="daily-watching-length-from" class="control-label input-sm">From</label>
+                            <input type="text" class="form-control input-sm" id="daily-watching-length-from" name="daily-watching-length-from" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="daily-watching-length-to" class="control-label input-sm">To</label>
+                            <input type="text" class="form-control input-sm" id="daily-watching-length-to" name="daily-watching-length-to" value="">
+                        </div>
+                        <button type="button" class="btn btn-default btn-sm" id="submit-daily-watching-length">Query</button>
+                    </form>
+                </div>
+                <div class="panel-body" id="chart-daily-watching-length">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Data</h3>
+                </div>
+                <div class="panel-body">
+                    <textarea id="memo-daily-watching-length" name="memo-daily-watching-length" class="form-control" rows="20" readonly="readonly"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="//code.highcharts.com/4.1.10/highcharts.js"></script>
+<script>
+    $(function() {
+        // Init daily length
+        $("#daily-length-from").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#daily-length-to").datepicker("option", "minDate", selectedDate);
+            }
+        });
+
+        $("#daily-length-from").datepicker("setDate", "<?=date('Y-m-d', strtotime('-7 day'))?>");
+
+        $("#daily-length-to").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#daily-length-from").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        $("#daily-length-to").datepicker("setDate", "<?=date('Y-m-d')?>");
+
+        // Init daily top n
+        $("#daily-top-n-from").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd"
+        });
+
+        $("#daily-top-n-from").datepicker("setDate", "<?=date('Y-m-d')?>");
+
+        // Init daily watching length
+        $("#daily-watching-length-from").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#daily-watching-length-to").datepicker("option", "minDate", selectedDate);
+            }
+        });
+
+        $("#daily-watching-length-from").datepicker("setDate", "<?=date('Y-m-d', strtotime('-30 day'))?>");
+
+        $("#daily-watching-length-to").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#daily-watching-length-from").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        $("#daily-watching-length-to").datepicker("setDate", "<?=date('Y-m-d')?>");
+
+        // Highcharts
+        Highcharts.setOptions({
+            global: {
+                timezoneOffset: <?=$timezone * -1?> * 60
+            }
+        });
+
+        // Charts for daily streaming length
+        $('#chart-daily-length').highcharts({
+            chart: {
+                type: 'column',
+                zoomType: 'x',
+                spacingRight: 20
+            },
+            title: {
+                text: 'Daily Streaming Length'
+            },
+            subtitle: {
+                text: "Source: <?=$domain?> Timezone: <?=date_default_timezone_get()?>"
+            },
+            xAxis: {
+                type: 'datetime',
+                maxZoom: 3600 * 1000,
+                title: {
+                    text: null
+                }
+            },
+            yAxis: [{
+                min: 0,
+                title: {
+                    text: 'Streaming Length (hours)'
+                },
+                minTickInterval: 1,
+                allowDecimals: false
+            }],
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                shared: true
+            },
+            credits: {
+                enabled: false
+            }
+        });
+
+        var chartDailyLength = $('#chart-daily-length').highcharts();
+
+        $("#submit-daily-length").click(function() {
+            $.post(
+                '/admin/streamingreport/daily_length',
+                {
+                    channel: $("#daily-length-channel").val(),
+                    from: $("#daily-length-from").val(),
+                    to: $("#daily-length-to").val()
+                },
+                function (response) {
+                    if (response.code == 200) {
+                        var i, len;
+
+                        if (chartDailyLength.series.length) {
+                            chartDailyLength.series[0].remove(false);
+                        }
+
+                        var series = chartDailyLength.addSeries({
+                            name: 'Total',
+                            data: [],
+                            color: '#7cb5ec'
+                        });
+
+                        var data = [];
+                        var memo = '';
+                        for (i = 0, len = response.data.length; i < len; i++) {
+                            data.push([response.data[i].timestamp, response.data[i].live_length]);
+                            memo += response.data[i].dt + "\t" + response.data[i].live_length + "\n";
+                        }
+
+                        series.setData(data);
+
+                        $("#memo-daily-length").val(memo);
+                    }
+                }
+            );
+        });
+
+        $("#submit-daily-length").click();
+
+        // Charts for daily top-n
+        $('#chart-daily-top-n').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Daily Top-N Streaming Channel'
+            },
+            subtitle: {
+                text: "Source: <?=$domain?> Timezone: <?=date_default_timezone_get()?>"
+            },
+            xAxis: {
+                title: {
+                    text: null
+                }
+            },
+            yAxis: [{
+                min: 0,
+                title: {
+                    text: 'Streaming Length (hours)'
+                },
+                minTickInterval: 1,
+                allowDecimals: false
+            }],
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                shared: true,
+            },
+            credits: {
+                enabled: false
+            }
+        });
+
+        var chartDailyTopN = $('#chart-daily-top-n').highcharts();
+
+        $("#submit-daily-top-n").click(function() {
+            $.post(
+                '/admin/streamingreport/daily_top_n',
+                {
+                    from: $("#daily-top-n-from").val(),
+                    limit: $("#daily-top-n-limit").val()
+                },
+                function (response) {
+                    if (response.code == 200) {
+                        var i, len;
+
+                        if (chartDailyTopN.series.length) {
+                            chartDailyTopN.series[0].remove(false);
+                        }
+
+                        var series = chartDailyTopN.addSeries({
+                            name: 'Total',
+                            data: [],
+                            color: '#7cb5ec'
+                        });
+
+                        var categories = [];
+                        var data = [];
+                        var memo = '';
+                        for (i = 0, len = response.data.length; i < len; i++) {
+                            data.push([response.data[i].channel, response.data[i].live_length]);
+                            categories.push(response.data[i].channel);
+                            memo += response.data[i].channel + "\t" + response.data[i].live_length + "\n";
+                        }
+
+                        series.setData(data);
+                        chartDailyTopN.xAxis[0].setCategories(categories);
+
+                        $("#memo-daily-top-n").val(memo);
+                    }
+                }
+            );
+        });
+
+        $("#submit-daily-top-n").click();
+
+        // Charts for daily watching length
+        $('#chart-daily-watching-length').highcharts({
+            chart: {
+                type: 'column',
+                zoomType: 'x',
+                spacingRight: 20
+            },
+            title: {
+                text: 'Daily Watching Length'
+            },
+            subtitle: {
+                text: "Source: <?=$domain?> Timezone: <?=date_default_timezone_get()?>"
+            },
+            xAxis: {
+                type: 'datetime',
+                maxZoom: 3600 * 1000,
+                title: {
+                    text: null
+                }
+            },
+            yAxis: [{
+                min: 0,
+                title: {
+                    text: 'Watching Length (hours)'
+                },
+                minTickInterval: 1,
+                allowDecimals: false
+            }],
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                shared: true
+            },
+            credits: {
+                enabled: false
+            }
+        });
+
+        var chartDailyWatchingLength = $('#chart-daily-watching-length').highcharts();
+
+        $("#submit-daily-watching-length").click(function() {
+            $.post(
+                '/admin/streamingreport/daily_watching_length',
+                {
+                    from: $("#daily-watching-length-from").val(),
+                    to: $("#daily-watchin-length-to").val()
+                },
+                function (response) {
+                    if (response.code == 200) {
+                        var i, len;
+
+                        if (chartDailyWatchingLength.series.length) {
+                            chartDailyWatchingLength.series[0].remove(false);
+                        }
+
+                        var series = chartDailyWatchingLength.addSeries({
+                            name: 'Total',
+                            data: [],
+                            color: '#7cb5ec'
+                        });
+
+                        var data = [];
+                        var memo = '';
+                        for (i = 0, len = response.data.length; i < len; i++) {
+                            data.push([response.data[i].timestamp, response.data[i].watching_length]);
+                            memo += response.data[i].dt + "\t" + response.data[i].views + "\t" + response.data[i].watching_length + "\n";
+                        }
+
+                        series.setData(data);
+
+                        $("#memo-daily-watching-length").val(memo);
+                    }
+                }
+            );
+        });
+
+        $("#submit-daily-watching-length").click();
+
+    });
+</script>

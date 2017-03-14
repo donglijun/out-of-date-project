@@ -1,0 +1,214 @@
+<div class="container">
+    <h1 class="text-center">Feedback List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-inline" role="form" method="get" action="/admin/feedback/list">
+                <div class="form-group">
+                    <label for="lang" class="control-label input-sm">Lang</label>
+                    <select name="lang" class="form-control input-sm">
+                        <option value="">All</option>
+                        <?php foreach ($langs as $key => $val) { ?>
+                            <option value="<?=$key?>" <?=(isset($filter['lang']) && $key==$filter['lang']) ? 'selected="selected"' : ''?>><?=$val?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="client" class="control-label input-sm">Client</label>
+                    <select name="client" class="form-control input-sm">
+                        <option value="">All</option>
+                        <?php foreach ($clients as $key => $val) { ?>
+                            <option value="<?=$key?>" <?=(isset($filter['client']) && $key==$filter['client']) ? 'selected="selected"' : ''?>><?=$val?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="from" class="control-label input-sm">From</label>
+                    <input type="text" class="form-control input-sm" id="from" name="from" value="">
+                </div>
+                <div class="form-group">
+                    <label for="to" class="control-label input-sm">To</label>
+                    <input type="text" class="form-control input-sm" id="to" name="to" value="">
+                </div>
+                <div class="form-group">
+                    <label for="message" class="control-label input-sm">Message</label>
+                    <select name="message" class="form-control input-sm">
+                        <option value="">All</option>
+                        <?php foreach ($messages as $key => $val) { ?>
+                            <option value="<?=$val['message']?>" <?=(isset($filter['message']) && $val['message']==$filter['message']) ? 'selected="selected"' : ''?>><?=$val['times'] . ' : ' . Misc::escape(mb_substr($val['message'], 0, 40))?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th style="width: 30px;">#</th>
+                        <th style="width: 60px;">User</th>
+                        <th style="width: 50px;">Client</th>
+                        <th style="width: 50px;">Lang</th>
+                        <th style="">Description</th>
+                        <th style="width: 200px;">Translation</th>
+                        <th style="width: 200px;">Errors</th>
+                        <th style="width: 120px;">Created On</th>
+                        <th style="width: 90px;">OS</th>
+                        <th style="width: 160px;">Operation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr class="<?php if (empty($row['log_path'])) { ?>warning<?php } else if ($row['translation']) { ?>success<?php } ?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=$row['user']?></td>
+                        <td><?=$row['client']?></td>
+                        <td><?=Misc::escape($row['lang'])?></td>
+                        <td>
+                            <div style="width: 190px; height:80px; overflow: auto;">
+                                <pre><?=Misc::escape($row['description'])?></pre>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="width: 190px; height:80px; overflow: auto;">
+                                <pre id="translation_<?=$row['id']?>" class="translation" data-title="<?=$row['translated_by'] ? 'Translated by ' . $row['translated_by'] . ' @ ' . date('Y-m-d H:i', $row['translated_on']) : ''?>"><?=Misc::escape($row['translation'])?></pre>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="width: 190px; height:80px; overflow: auto;">
+                                <pre id="errors_<?=$row['id']?>"></pre>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-xs btn-created-on" data-title="<?=Misc::escape($row['contact_way'])?>" data-content="<?=Misc::escape($row['contact_info'])?>"><?=date('Y-m-d H:i', $row['created_on'])?></button>
+                        </td>
+                        <td>
+                            <span class="os" data-title="<?=Misc::escape($row['os'])?>"><?=mb_substr(Misc::escape($row['os']), 0, 10)?></span>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-xs btn-translate" data-id="<?=$row['id']?>">Translate</button>
+                            <button type="button" class="btn btn-info btn-xs btn-view-errors" data-id="<?=$row['id']?>">Errors</button>
+                            <a href="<?=$row['log_path'] ? '/admin/feedback/viewlog?id=' . $row['id'] : '#'?>" class="btn btn-xs <?=$row['log_path'] ? 'btn-info' : 'disabled'?>" target="_blank">Log</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-form-translate" title="Translate">
+    <form>
+        <textarea id="translation" style="width: 372px; height: 200px;"></textarea>
+    </form>
+</div>
+
+<script>
+    $(function() {
+        $("#dialog-form-translate").dialog({
+            autoOpen: false,
+            height: 320,
+            width: 400,
+            modal: true,
+            buttons: {
+                "Translate": function() {
+                    var feedback_id     = $(this).dialog("option", "feedback_id"),
+                        translate_url   = $(this).dialog("option", "translate_url"),
+                        translation     = $("#translation").val(),
+                        dialog          = $(this);
+                    $.post(
+                        translate_url,
+                        {
+                            id: feedback_id,
+                            translation: translation
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                $("#translation_" + feedback_id).html($("#translation").val());
+                                $("#translation_" + feedback_id).attr("data-title", response.data.translated);
+                            } else {
+                                alert("Error: " + response.code);
+                            }
+
+                            dialog.dialog("close");
+                        },
+                        "json"
+                    );
+                },
+                Cancel: function() {
+                    $(this).dialog("close");
+                }
+            },
+            open: function() {
+                $("#translation").val($(this).dialog("option", "old_translation"));
+            },
+            close: function() {
+                $("#translation").val("");
+            }
+        });
+
+        $(".btn-translate").each(function() {
+            $(this).click(function() {
+                $("#dialog-form-translate").dialog("option", {
+                    feedback_id: $(this).data("id"),
+                    translate_url: "/admin/feedback/translate",
+                    old_translation: $("#translation_" + $(this).data("id")).text()
+                }).dialog("open");
+            });
+        });
+
+        $(".btn-view-errors").each(function() {
+            $(this).click(function() {
+                var feedback_id = $(this).data("id");
+
+                $.post(
+                    "/admin/feedback/geterrors",
+                    {
+                        id: feedback_id
+                    },
+                    function(response) {
+                        if (response.code == 200) {
+                            var errors = "";
+                            for (var i=0; i<response.data.length; i++) {
+                                errors += response.data[i].times + ' : ' + response.data[i].message + "\n";
+                            }
+                            $("#errors_" + feedback_id).html(errors);
+                        }
+                    },
+                    "json"
+                );
+            });
+        });
+
+        $(".btn-created-on").popover();
+
+        $(".translation").tooltip();
+
+        $(".os").tooltip();
+
+        $("#from").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#to").datepicker("option", "minDate", selectedDate);
+            }
+        });
+
+        $("#from").datepicker("setDate", "<?=isset($filter['from']) ? $filter['from'] : date('Y-m-d')?>");
+
+        $("#to").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#from").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        $("#to").datepicker("setDate", "<?=isset($filter['to']) ? $filter['to'] : date('Y-m-d', strtotime('+1 day'))?>");
+    });
+</script>

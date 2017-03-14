@@ -1,0 +1,123 @@
+<div class="container">
+    <h1 class="text-center">Deck List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <a href="/admin/deck/create" class="btn btn-primary">New</a>
+        </div>
+        <div class="col-md-7">
+            <form class="form-inline" role="form" method="get" action="/admin/deck/list">
+                <div class="form-group">
+                    <label for="lang" class="control-label input-sm">Lang</label>
+                    <select name="lang" class="form-control input-sm">
+                        <option value="">All</option>
+                        <?php foreach ($langs as $key => $val) { ?>
+                            <option value="<?=$key?>" <?=(isset($filter['lang']) && $key==$filter['lang']) ? 'selected="selected"' : ''?>><?=$val?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="class" class="control-label input-sm">Class</label>
+                    <select name="class" class="form-control input-sm">
+                        <option value="">All</option>
+                        <?php foreach ($classes as $key => $val) { ?>
+                            <option value="<?=$key?>" <?=(isset($filter['class']) && $key==$filter['class']) ? 'selected="selected"' : ''?>><?=$val?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select name="search_field" class="form-control input-sm">
+                        <option value="user" <?=(isset($filter['search_field']) && 'user'==$filter['search_field']) ? 'selected="selected"' : ''?>>User</option>
+                        <option value="id" <?=(isset($filter['search_field']) && 'id'==$filter['search_field']) ? 'selected="selected"' : ''?>>Deck</option>
+                    </select>
+                    <input type="text" name="search_value" class="form-control input-sm" value="<?=isset($filter['search_value']) ? $filter['search_value'] : ''?>">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+        <div class="col-md-3 alert alert-info">
+            <ul>
+                <li>国服发布账号：<strong>2196768</strong></li>
+                <li>台服发布账号：<strong>2256141</strong></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>User</th>
+                        <th>Class</th>
+                        <th>Version</th>
+                        <th>Public</th>
+                        <th>Favorites</th>
+                        <th>Views</th>
+                        <th>Comments</th>
+                        <th>Created on</th>
+                        <th>Recommended</th>
+                        <th>Operation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><a href="/admin/deck/view?deck=<?=$row['id']?>"><?=Misc::escape($row['title'])?></a></td>
+                        <td><?=$row['user']?></td>
+                        <td><?=$row['class']?></td>
+                        <td><?=$row['game_version']?></td>
+                        <td><?=$row['is_public'] ? 'Y' : ''?></td>
+                        <td><?=$row['favorites']?></td>
+                        <td><?=$row['views']?></td>
+                        <td><?=$row['comments']?></td>
+                        <td><?=date('Y-m-d H:i', $row['created_on'])?></td>
+                        <td>
+                            <a href="/admin/recommended/create?deck=<?=$row['id']?>" class="btn btn-info btn-sm">Recommend</a>
+                        </td>
+                        <td>
+                            <a href="/admin/deck/update?deck=<?=$row['id']?>" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="/admin/deck/delete?ids=<?=$row['id']?>" class="btn btn-danger btn-sm btn-delete" data-id="<?=$row['id']?>">Delete</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $(".btn-delete").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really???')) {
+                    var btn     = $(this),
+                        deck_id = btn.data("id");
+
+                    $.post(
+                        "/admin/deck/delete",
+                        {
+                            ids: deck_id
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                $("#row-" + deck_id).remove();
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+    });
+</script>

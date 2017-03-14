@@ -1,0 +1,84 @@
+<div class="container">
+    <h1 class="text-center">View User Info</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/mkuser/list" class="btn btn-primary">User List</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <th>User ID</th>
+                    <td><?=isset($data['user_id']) ? $data['user_id'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>User Type</th>
+                    <td><?=isset($data['user_type']) ? $data['user_type'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Group ID</th>
+                    <td><?=isset($data['group_id']) ? Misc::escape($data['group_id']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>User IP</th>
+                    <td><?=isset($data['user_ip']) ? $data['user_ip'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Registry Date</th>
+                    <td><?=isset($data['user_regdate']) ? date('Y-m-d H:i', $data['user_regdate']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>User Name</th>
+                    <td><?=isset($data['username']) ? $data['username'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Clean Name</th>
+                    <td><?=isset($data['username_clean']) ? $data['username_clean'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>User Email</th>
+                    <td><?=isset($data['user_email']) ? $data['user_email'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>User Birthday</th>
+                    <td><?=isset($data['user_birthday']) ? $data['user_birthday'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>User Last Visit</th>
+                    <td><?=isset($data['user_lastvisit']) ? $data['user_lastvisit'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Lang</th>
+                    <td><?=isset($data['user_lang']) ? $data['user_lang'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Timezone</th>
+                    <td><?=isset($data['user_timezone']) ? $data['user_timezone'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>User Rank</th>
+                    <td><?=isset($data['user_rank']) ? $data['user_rank'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Comments</th>
+                    <td><?=isset($data['user_avatar']) ? $data['user_avatar'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Views</th>
+                    <td><?=isset($data['user_from']) ? $data['user_from'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Source</th>
+                    <td><?=isset($data['user_new']) ? Misc::escape($data['user_new']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Nickname</th>
+                    <td><?=isset($data['nickname']) ? Misc::escape($data['nickname']) : ''?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

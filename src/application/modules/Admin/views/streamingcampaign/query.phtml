@@ -1,0 +1,198 @@
+<div class="container">
+    <h1 class="text-center">Streaming Campaign Result</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-9">
+            <form class="form-inline" role="form" method="get" action="/admin/streamingcampaign/query">
+                <div class="form-group">
+                    <label for="times" class="control-label input-sm">Times</label>
+                    <input type="text" name="times" id="times" class="form-control input-sm" value="<?=isset($times) ? $times : 5?>">
+                </div>
+                <div class="form-group">
+                    <label for="from" class="control-label input-sm">From</label>
+                    <input type="text" class="form-control input-sm" id="from" name="from" value="">
+                </div>
+                <div class="form-group">
+                    <label for="to" class="control-label input-sm">To</label>
+                    <input type="text" class="form-control input-sm" id="to" name="to" value="">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+        <div class="col-md-3">
+            <a href="/admin/streamingcampaignmember/list" class="btn btn-info">Members</a>
+            <a href="/admin/streamingcampaigncomplain/list" class="btn btn-warning">Complain</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>Channel ID</th>
+                    <th>Owner Name</th>
+                    <th>Game Account</th>
+                    <th>Memo</th>
+                    <th>Contact</th>
+                    <th>Times</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>" class="<?=$row['awarded'] ? 'success' : ''?>">
+                        <td><a href="/admin/streamingchannel/view?channel=<?=$row['id']?>"><?=$row['id']?></a></td>
+                        <td><a href="/admin/streamingchannel/view?channel=<?=$row['id']?>"><?=Misc::escape($row['name'])?></a></td>
+                        <td><?=Misc::escape($row['game_account'])?></td>
+                        <td>
+                            <div style="width: 190px; height:80px; overflow: auto;">
+                                <pre id="memo-<?=$row['id']?>"><?=Misc::escape($row['memo'])?></pre>
+                            </div>
+                        </td>
+                        <td>
+                            <ul class="list-unstyled">
+                                <?php if ($row['facebook']) { ?>
+                                    <li><strong>Facebook:</strong><span class="pull-right"><?=Misc::escape($row['facebook'])?></span></li>
+                                <?php } ?>
+                                <?php if ($row['skype']) { ?>
+                                    <li><strong>Skype:</strong><span class="pull-right"><?=Misc::escape($row['skype'])?></span></li>
+                                <?php } ?>
+                            </ul>
+                        </td>
+                        <td><?=$row['times']?></td>
+                        <td>
+                            <!--a href="#" class="btn btn-sm btn-award <?=$row['awarded'] ? 'btn-default disabled' : 'btn-primary'?>" data-id="<?=$row['id']?>"><?=$row['awarded'] ? 'Awarded' : 'Award'?></a-->
+                            <a href="/admin/streamingchannel/history?channel=<?=$row['id']?>" class="btn btn-info btn-sm btn-history" target="_blank">History</a>
+                            <button type="button" class="btn btn-warning btn-sm btn-memo" data-id="<?=$row['id']?>">Memo</button>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<?php include Yaf_View_Simple::getScriptPath() . DIRECTORY_SEPARATOR . 'streamingchannel' . DIRECTORY_SEPARATOR . 'modal-memo.phtml'; ?>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $(".btn-memo").each(function() {
+            $(this).click(function() {
+                var btn = $(this),
+                    id  = btn.data("id");
+
+                $("#input-channel-memo").val($("#memo-"+id).text());
+                $("#memo-channel").val(id);
+
+                $("#memo-modal").modal("show");
+
+                return false;
+            });
+        });
+
+        $("#save-memo").click(function() {
+            var id = $("#memo-channel").val(),
+                memo = $("#input-channel-memo").val();
+
+            $.post(
+                "/admin/streamingchannel/memo",
+                {
+                    id: id,
+                    memo: memo
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        $("#memo-"+id).text(memo);
+                    } else {
+                        window.alert("Failed");
+                    }
+                },
+                "json"
+            );
+
+            $("#memo-modal").modal("hide");
+        });
+
+//        $(".btn-memo").each(function() {
+//            $(this).click(function() {
+//                var btn = $(this),
+//                    id  = btn.data("id"),
+//                    memo = $("#memo-"+id);
+//
+//                var input = window.prompt('Memo', memo.text());
+//
+//                if (input != null) {
+//                    $.post(
+//                        "/admin/streamingcampaignmember/memo",
+//                        {
+//                            id: id,
+//                            memo: input
+//                        },
+//                        function(response) {
+//                            if (response.code == 200) {
+//                                memo.text(input);
+//                            } else {
+//                                window.alert("Fail to update memo");
+//                            }
+//                        },
+//                        "json"
+//                    );
+//                }
+//
+//                return false;
+//            });
+//        });
+
+//        $(".btn-award").each(function() {
+//            $(this).click(function() {
+//                var btn = $(this),
+//                    id  = btn.data("id");
+//
+//                $.post(
+//                    "/admin/streamingcampaign/award",
+//                    {
+//                        channel: id,
+//                        mark: "<?//=$mark?>//"
+//                    },
+//                    function(response) {
+//                        if (response.code == 200) {
+//                            btn.removeClass("btn-primary").addClass("btn-default disabled");
+//                            btn.text("Awarded");
+//                            $("#row-" + id).addClass("success");
+//                        }
+//                    },
+//                    "json"
+//                );
+//
+//                return false;
+//            });
+//        });
+
+        $("#from").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#to").datepicker("option", "minDate", selectedDate);
+            }
+        });
+
+        $("#from").datepicker("setDate", "<?=isset($from) ? $from : date('Y-m-d')?>");
+
+        $("#to").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#from").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        $("#to").datepicker("setDate", "<?=isset($to) ? $to : date('Y-m-d')?>");
+    });
+</script>

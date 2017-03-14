@@ -1,0 +1,94 @@
+<div class="container">
+    <h1 class="text-center">Streaming Campaign Complain</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            &nbsp;
+        </div>
+        <div class="col-md-10">
+            <form class="form-inline" role="form" method="get" action="/admin/streamingcampaigncomplain/list">
+                <div class="form-group">
+                    <label for="user" class="control-label input-sm">User ID</label>
+                    <input type="text" name="user" id="user" class="form-control input-sm" value="<?=isset($filter['user']) ? $filter['user'] : ''?>">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Reason</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th>Created on</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=$row['user']?></td>
+                        <td>
+                            <div style="width: 200px; height:80px; overflow: auto;">
+                            <pre><?=Misc::escape($row['reason'])?></pre>
+                            </div>
+                        </td>
+                        <td><?=Misc::escape($row['contact'])?></td>
+                        <td id="status-<?=$row['id']?>"><?=$row['status']?></td>
+                        <td><?=date('Y-m-d H:i', $row['created_on'])?></td>
+                        <td>
+                            <?php if ($row['status'] < 1) { ?>
+                            <a href="/admin/streamingcampaigncomplain/process?id=<?=$row['id']?>" class="btn btn-primary btn-sm btn-process" data-id="<?=$row['id']?>">Process</a>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+    });
+
+    $(".btn-process").each(function() {
+        $(this).click(function() {
+            var btn = $(this),
+                id  = btn.data("id");
+
+            $.post(
+                "/admin/streamingcampaigncomplain/process",
+                {
+                    ids: id
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        btn.hide();
+                        $("status-"+id).text("1");
+                    }
+                },
+                "json"
+            );
+
+            return false;
+        });
+    });
+</script>

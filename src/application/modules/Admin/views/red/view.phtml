@@ -1,0 +1,92 @@
+<div class="container">
+    <h1 class="text-center">View Red Info</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/red/list" class="btn btn-primary">Red List</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <th>Red ID</th>
+                    <td><?=isset($data['id']) ? $data['id'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>User ID</th>
+                    <td><?=isset($data['user']) ? $data['user'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <td><?=isset($data['name']) ? Misc::escape($data['name']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Points</th>
+                    <td><?=isset($data['points']) ? $data['points'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Number</th>
+                    <td><?=isset($data['number']) ? $data['number'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Consumed Points</th>
+                    <td><?=isset($data['consumed_points']) ? $data['consumed_points'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Memo</th>
+                    <td>
+                        <pre><?=isset($data['memo']) ? Misc::escape($data['memo']) : ''?></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Target Channel</th>
+                    <td><?=isset($data['target_channel']) ? $data['target_channel'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Target Client</th>
+                    <td><?=isset($data['target_client']) && isset($clients[$data['target_client']]) ? $clients[$data['target_client']] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Created On</th>
+                    <td><?=isset($data['created_on']) && $data['created_on'] ? date('Y-m-d H:i:s', $data['created_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Ending On</th>
+                    <td><?=isset($data['ending_on']) && $data['ending_on'] ? date('Y-m-d H:i:s', $data['ending_on']) : ''?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Title</th>
+                    <th>Points</th>
+                    <th>Memo</th>
+                    <th>Dealt On</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($log as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=$row['user']?></td>
+                        <td><?=Misc::escape($row['name'])?></td>
+                        <td><?=Misc::escape($row['title'])?></td>
+                        <td><?=$row['points']?></td>
+                        <td><?=Misc::escape($row['memo'])?></td>
+                        <td><?=$row['dealt_on'] ? date('Y-m-d H:i', $row['dealt_on']) : ''?></td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

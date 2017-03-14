@@ -1,0 +1,131 @@
+<div class="container">
+    <h1 class="text-center">Feedback Summary</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-inline" role="form" method="get" action="/admin/feedback/summary">
+                <div class="form-group">
+                    <label for="lang" class="control-label input-sm">Lang</label>
+                    <select name="lang" class="form-control input-sm">
+                        <option value="">All</option>
+                        <?php foreach ($langs as $key => $val) { ?>
+                            <option value="<?=$key?>" <?=(isset($filter['lang']) && $key==$filter['lang']) ? 'selected="selected"' : ''?>><?=$val?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="client" class="control-label input-sm">Client</label>
+                    <select name="client" class="form-control input-sm">
+                        <option value="">All</option>
+                        <?php foreach ($clients as $key => $val) { ?>
+                            <option value="<?=$key?>" <?=(isset($filter['client']) && $key==$filter['client']) ? 'selected="selected"' : ''?>><?=$val?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="from" class="control-label input-sm">From</label>
+                    <input type="text" class="form-control input-sm" id="from" name="from" value="">
+                </div>
+                <div class="form-group">
+                    <label for="to" class="control-label input-sm">To</label>
+                    <input type="text" class="form-control input-sm" id="to" name="to" value="">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12" id="chart-feedback-summary">
+        </div>
+    </div>
+</div>
+
+<script src="//code.highcharts.com/4.1.10/highcharts.js"></script>
+<script>
+    $(function() {
+        $("#from").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#to").datepicker("option", "minDate", selectedDate);
+            }
+        });
+
+        $("#from").datepicker("setDate", "<?=isset($filter['from']) ? $filter['from'] : date('Y-m-d')?>");
+
+        $("#to").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#from").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        $("#to").datepicker("setDate", "<?=isset($filter['to']) ? $filter['to'] : date('Y-m-d', strtotime('+1 day'))?>");
+
+        // Charts
+        $('#chart-feedback-summary').highcharts({
+            chart: {
+                <?php if ($messagesCount > 10) { ?>
+                height: <?=$messagesCount * 30?>,
+                <?php } ?>
+                type: 'bar'
+            },
+            title: {
+                text: 'Client Errors Summary'
+            },
+            subtitle: {
+                text: "Lang: <?=isset($filter['lang']) ? $filter['lang'] : 'All'?> From: <?=isset($filter['from']) ? $filter['from'] : ''?> To: <?=isset($filter['to']) ? $filter['to'] : ''?>"
+            },
+            xAxis: {
+                categories: <?=isset($messages) ? $messages : '[]'?>,
+                title: {
+                    text: 'Error'
+                },
+                labels: {
+                    enabled: false
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Occurance',
+                    align: 'high'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                valueSuffix: ' times'
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                },
+                series: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function(e) {
+                                location.href = e.point.url;
+                            }
+                        }
+                    }
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                data: <?=$series?>
+            }]
+        });
+    });
+</script>

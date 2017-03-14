@@ -1,0 +1,300 @@
+<div class="container">
+    <h1 class="text-center">Streaming Channel List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-1">
+            <a href="/admin/streamingchannel/create" class="btn btn-primary">New</a>
+        </div>
+        <div class="col-md-7">
+            <form class="form-inline" role="form" method="get" action="/admin/streamingchannel/list">
+                <div class="form-group">
+                    <select name="search_field" class="form-control input-sm">
+                        <option value="owner_name" <?=(isset($filter['search_field']) && 'owner_name'==$filter['search_field']) ? 'selected="selected"' : ''?>>User Name</option>
+                        <option value="id" <?=(isset($filter['search_field']) && 'id'==$filter['search_field']) ? 'selected="selected"' : ''?>>User ID</option>
+                        <option value="alias" <?=(isset($filter['search_field']) && 'alias'==$filter['search_field']) ? 'selected="selected"' : ''?>>Alias</option>
+                    </select>
+                    <input type="text" name="search_value" class="form-control input-sm" value="<?=isset($filter['search_value']) ? Misc::escape($filter['search_value']) : ''?>">
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="is_online" value="1" <?=isset($filter['is_online']) && $filter['is_online'] ? 'checked="checked"' : ''?>> Live
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="is_banned" value="1" <?=isset($filter['is_banned']) && $filter['is_banned'] ? 'checked="checked"' : ''?>> Banned
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="is_signed" value="1" <?=isset($filter['is_signed']) && $filter['is_signed'] ? 'checked="checked"' : ''?>> Signed
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="is_exclusive" value="1" <?=isset($filter['is_exclusive']) && $filter['is_exclusive'] ? 'checked="checked"' : ''?>> Exclusive
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <a href="/admin/streamingchannel/getschedules" class="btn btn-info">
+                View Schedules <span class="badge" id="schedule_count"></span>
+            </a>
+            <a href="/admin/systembroadcast/list" class="btn btn-warning">System Broadcast</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Memo</th>
+                    <th>Watching</th>
+                    <th>Class</th>
+                    <th>Special</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>" class="<?=($row['id'] == $clientone) ? 'success' : ''?>">
+                        <td><a href="/admin/streamingchannel/view?channel=<?=$row['id']?>" target="_blank"><?=$row['id']?></a></td>
+                        <td><a href="/admin/streamingchannel/view?channel=<?=$row['id']?>" target="_blank"><?=Misc::escape($row['title'])?></a></td>
+                        <td>
+                            <div style="width: 190px; height: 80px; overflow: auto;">
+                                <pre id="memo-<?=$row['id']?>"><?=Misc::escape($row['memo'])?></pre>
+                            </div>
+                        </td>
+                        <td><?=number_format($row['watching_now'])?></td>
+                        <td><?=isset($classes[$row['class']]) ? $classes[$row['class']] : ''?></td>
+                        <td><?=Misc::escape($row['special'])?></td>
+                        <td>
+                            <?php if ($row['is_online']) { ?>
+                                <span class="label label-success">Live</span>
+                            <?php } ?>
+                            <?php if ($row['is_banned']) { ?>
+                                <span class="label label-danger">Banned</span>
+                            <?php } ?>
+                            <?php if ($row['is_exclusive']) { ?>
+                                <span class="label label-info">Exclusive</span>
+                            <?php } elseif ($row['is_signed']) { ?>
+                                <span class="label label-warning">Signed</span>
+                            <?php } ?>
+                        </td>
+                        <td>
+                            <a href="/admin/streamingchannel/update?id=<?=$row['id']?>" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="/admin/streamingchannel/pushschedual?channel=<?=$row['id']?>" class="btn btn-info btn-sm btn-push" data-id="<?=$row['id']?>">Schedule</a>
+                            <a href="/admin/streamingchannel/setclientone?channel=<?=$row['id']?>" class="btn btn-warning btn-sm btn-set-client-one <?=($row['id'] == $clientone) ? 'disabled' : ''?>" data-id="<?=$row['id']?>">Push Now!</a>
+                            <a href="/admin/streamingchannel/history?channel=<?=$row['id']?>" class="btn btn-info btn-sm btn-history" target="_blank">History</a>
+                            <button type="button" class="btn btn-warning btn-sm btn-memo" data-id="<?=$row['id']?>">Memo</button>
+                            <a href="/admin/streamingchannel/ban?ids=<?=$row['id']?>&status=<?=$row['is_banned'] ? 0 : 1?>" class="btn btn-danger btn-sm btn-ban" data-id="<?=$row['id']?>" data-status="<?=$row['is_banned']?>"><?=$row['is_banned'] ? 'Release' : 'Ban'?></a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="push-modal" tabindex="-1" role="dialog" aria-labelledby="push-to-client" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Push Schedule</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Dates: <textarea id="dates" name="dates" class="form-control" rows="7"></textarea>
+                    <em>* One date per line</em>
+                </p>
+                <p>
+                    Time: <input type="text" class="form-control input-sm" id="time" name="time" value="">
+                </p>
+                <input type="hidden" id="push-channel" name="push-channel" value="">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="save-push">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php include Yaf_View_Simple::getScriptPath() . DIRECTORY_SEPARATOR . 'streamingchannel' . DIRECTORY_SEPARATOR . 'modal-memo.phtml'; ?>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $(".btn-delete").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/streamingchannel/delete",
+                        {
+                            ids: id
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                $("#row-" + id).remove();
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+
+        $(".btn-set-client-one").each(function() {
+            $(this).click(function() {
+                var btn = $(this),
+                    id  = btn.data("id");
+
+                $.post(
+                    "/admin/streamingchannel/setclientone",
+                    {
+                        channel: id
+                    },
+                    function(response) {
+                        if (response.code == 200) {
+                            $(".success").each(function() {
+                                $(this).removeClass("success");
+                            });
+
+                            $(".btn-set-client-one").each(function() {
+                                $(this).removeClass("disabled");
+                            });
+
+                            $("#row-"+id).addClass("success");
+                            btn.addClass("disabled");
+                        }
+                    },
+                    "json"
+                );
+
+                return false;
+            });
+        });
+
+        $(".btn-push").each(function() {
+            $(this).click(function() {
+                var btn = $(this);
+
+                $("#push-channel").val(btn.data("id"));
+                $("#dates").val("<?=date('Y-m-d')?>");
+                $("#time").val("<?=date('H:00:00', strtotime("+1 hour"))?>");
+
+                $("#push-modal").modal("show");
+
+                return false;
+            });
+        });
+
+        $("#save-push").click(function() {
+            $.post(
+                "/admin/streamingchannel/pushschedule",
+                {
+                    channel: $("#push-channel").val(),
+                    dates: $("#dates").val(),
+                    time: $("#time").val()
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        alert("Push ok.");
+                    }
+                },
+                "json"
+            );
+
+            $("#push-modal").modal("hide");
+        });
+
+        $(".btn-memo").each(function() {
+            $(this).click(function() {
+                var btn = $(this),
+                    id  = btn.data("id");
+
+                $("#input-channel-memo").val($("#memo-"+id).text());
+                $("#memo-channel").val(id);
+
+                $("#memo-modal").modal("show");
+
+                return false;
+            });
+        });
+
+        $("#save-memo").click(function() {
+            var id = $("#memo-channel").val(),
+                memo = $("#input-channel-memo").val();
+
+            $.post(
+                "/admin/streamingchannel/memo",
+                {
+                    id: id,
+                    memo: memo
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        $("#memo-"+id).text(memo);
+                    } else {
+                        window.alert("Failed");
+                    }
+                },
+                "json"
+            );
+
+            $("#memo-modal").modal("hide");
+        });
+
+//        $(".btn-memo").each(function() {
+//            $(this).click(function() {
+//                var btn = $(this),
+//                    id  = btn.data("id"),
+//                    memo = $("#memo-"+id);
+//
+//                var input = window.prompt('Memo', memo.text());
+//
+//                if (input != null) {
+//                    $.post(
+//                        "/admin/streamingchannel/memo",
+//                        {
+//                            id: id,
+//                            memo: input
+//                        },
+//                        function(response) {
+//                            if (response.code == 200) {
+//                                memo.text(input);
+//                            } else {
+//                                window.alert("Failed");
+//                            }
+//                        },
+//                        "json"
+//                    );
+//                }
+//
+//                return false;
+//            });
+//        });
+    });
+</script>

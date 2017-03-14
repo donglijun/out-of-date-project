@@ -1,0 +1,159 @@
+<div class="container">
+    <h1 class="text-center">Withdraw Order List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-10">
+            <form class="form-inline" role="form" method="get" action="/admin/money/withdraw_orders">
+                <div class="form-group">
+                    <label for="user" class="control-label input-sm">User ID</label>
+                    <input type="text" name="user" id="user" class="form-control input-sm" value="<?=isset($filter['user']) ? $filter['user'] : ''?>">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Date</th>
+                    <th>Live Length</th>
+                    <th>Live Salary</th>
+                    <th>Live Exclusive Bonus</th>
+                    <th>Goods Money</th>
+                    <th>Total Money</th>
+                    <th>Created On</th>
+                    <th>Status</th>
+                    <th>Pay Money</th>
+                    <th>
+                        &nbsp;
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><a href="/admin/streamingchannel/view?channel=<?=$row['user']?>" target="_blank"><?=$row['user']?></a></td>
+                        <td><?=$row['dt']?></td>
+                        <td><?=Misc::formatTimeLength($row['live_length'])?></td>
+                        <td><?=ceil($row['live_salary'])?></td>
+                        <td><?=ceil($row['live_exclusive_bonus'])?></td>
+                        <td><?=ceil($row['goods_money'])?></td>
+                        <td><?=ceil($row['total_money'])?></td>
+                        <td><?=$row['created_on'] ? date('Y-m-d H:i', $row['created_on']) : ''?></td>
+                        <td>
+                            <?php if ($row['status'] == MySQL_Streaming_WithdrawOrderModel::STATUS_NEW) { ?>
+                                <span class="label label-default">New</span>
+                            <?php } else if ($row['status'] == MySQL_Streaming_WithdrawOrderModel::STATUS_COMPLETED) { ?>
+                                <span class="label label-success">Completed</span>
+                            <?php } else if ($row['status'] == MySQL_Streaming_WithdrawOrderModel::STATUS_CANCELED) { ?>
+                                <span class="label label-danger">Canceled</span>
+                            <?php } ?>
+                        </td>
+                        <td><?=floatval($row['pay_money']) ? sprintf('$%.2f', $row['pay_money']) : '-'?></td>
+                        <td>
+                            <a href="/admin/money/view_withdraw_order?id=<?=$row['id']?>" target="_blank" class="btn btn-primary btn-sm">View</a>
+                            <?php if ($row['status'] == MySQL_Streaming_WithdrawOrderModel::STATUS_NEW) { ?>
+                                <a href="/admin/money/complete_withdraw_order?id=<?=$row['id']?>" class="btn btn-warning btn-sm btn-complete" data-id="<?=$row['id']?>" data-paypal="<?=$row['paypal']?>">Complete</a>
+                                <!--a href="/admin/money/cancel_withdraw_order?id=<?=$row['id']?>" class="btn btn-danger btn-sm btn-cancel" data-id="<?=$row['id']?>">Cancel</a-->
+                            <?php } ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<?php include Yaf_View_Simple::getScriptPath() . DIRECTORY_SEPARATOR . 'money' . DIRECTORY_SEPARATOR . 'modal-complete.phtml'; ?>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $(".btn-complete").each(function() {
+            $(this).click(function() {
+                var btn = $(this),
+                    id  = btn.data("id"),
+                    paypal = btn.data("paypal");
+
+                $("#complete-order-id").val(id + "");
+
+                $("#complete-paypal").val(paypal);
+
+                $("#complete-modal").modal("show");
+
+                return false;
+            });
+        });
+
+        $("#submit-complete").click(function() {
+            var order = $("#complete-order-id").val(),
+                money = $("#complete-pay-money").val();
+
+            $.post(
+                "/admin/money/complete_withdraw_order",
+                {
+                    id: order,
+                    pay_money: money
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        window.alert(response.message);
+
+                        window.location.reload();
+                    } else {
+                        window.alert(response.message ? response.message : "Failed");
+                    }
+                },
+                "json"
+            );
+
+            $("#complete-modal").modal("hide");
+        });
+
+//        $(".btn-cancel").each(function() {
+//            $(this).click(function() {
+//                var btn = $(this),
+//                    id  = btn.data("id");
+//
+//                if (window.confirm('Really???')) {
+//                    $.post(
+//                        "/admin/money/cancel_withdraw_order",
+//                        {
+//                            id: id
+//                        },
+//                        function(response) {
+//                            if (response.code == 200) {
+//                                window.alert(response.message);
+//
+//                                window.location.reload();
+//                            } else {
+//                                window.alert(response.message ? response.message : "Failed");
+//                            }
+//                        },
+//                        "json"
+//                    );
+//                }
+//
+//                return false;
+//            });
+//        });
+    });
+</script>

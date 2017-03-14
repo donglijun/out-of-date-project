@@ -1,0 +1,130 @@
+<div class="container">
+    <h1 class="text-center">League Season List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <a href="/admin/leagueseason/create" class="btn btn-primary">New</a>
+        </div>
+        <div class="col-md-10">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><a href="/admin/leagueapplication/list?season=<?=$row['id']?>"><?=Misc::escape($row['title'])?></a></td>
+                        <td>
+                            <?php if ($row['status'] == MySQL_League_SeasonModel::STATUS_PENDING) { ?>
+                                <span class="label label-default">Pending</span>
+                            <?php } else if ($row['status'] == MySQL_League_SeasonModel::STATUS_OPENING) { ?>
+                                <span class="label label-success">Opening</span>
+                            <?php } else if ($row['status'] == MySQL_League_SeasonModel::STATUS_LOCKING) { ?>
+                                <span class="label label-warning">Locking</span>
+                            <?php } else if ($row['status'] == MySQL_League_SeasonModel::STATUS_CLOSING) { ?>
+                                <span class="label label-danger">Closing</span>
+                            <?php } ?>
+                        </td>
+                        </td>
+                        <td>
+                            <?php if ($row['status'] == MySQL_League_SeasonModel::STATUS_PENDING) { ?>
+                            <a href="/admin/leagueseason/update?id=<?=$row['id']?>" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="/admin/leagueseason/open?id=<?=$row['id']?>" class="btn btn-success btn-sm btn-open" data-id="<?=$row['id']?>">Open</a>
+                            <?php } else if ($row['status'] == MySQL_League_SeasonModel::STATUS_OPENING) { ?>
+                            <a href="/admin/leagueseason/lock?id=<?=$row['id']?>" class="btn btn-warning btn-sm btn-lock" data-id="<?=$row['id']?>">Lock</a>
+                            <?php } else if ($row['status'] == MySQL_League_SeasonModel::STATUS_LOCKING) { ?>
+                            <a href="/admin/leagueseason/close?id=<?=$row['id']?>" class="btn btn-danger btn-sm btn-close" data-id="<?=$row['id']?>">Close</a>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $(".btn-open").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really OPEN a season???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/leagueseason/open",
+                        {
+                            id: id
+                        },
+                        function(response) {
+                            window.location.reload();
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+
+        $(".btn-lock").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really LOCK a season???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/leagueseason/lock",
+                        {
+                            id: id
+                        },
+                        function(response) {
+                            window.location.reload();
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+
+        $(".btn-close").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really CLOSE a season???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/leagueseason/close",
+                        {
+                            id: id
+                        },
+                        function(response) {
+                            window.location.reload();
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+    });
+</script>

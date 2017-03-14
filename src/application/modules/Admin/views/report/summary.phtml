@@ -1,0 +1,452 @@
+<div class="container">
+    <h1 class="text-center">Report Summary</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12" id="chart-online-users">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-sm-12" id="chart-daily-registration">
+        </div>
+        <div class="col-md-6 col-sm-12" id="chart-weekly-registration">
+        </div>
+        <div class="col-md-6 col-sm-12" id="chart-monthly-registration">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-sm-12" id="chart-hourly-active-users">
+        </div>
+        <div class="col-md-6 col-sm-12" id="chart-daily-active-users">
+        </div>
+        <div class="col-md-6 col-sm-12" id="chart-monthly-active-users">
+        </div>
+    </div>
+</div>
+
+<script src="//code.highcharts.com/4.1.10/highcharts.js"></script>
+<script>
+    $(function() {
+        Highcharts.setOptions({
+            global: {
+                timezoneOffset: -8 * 60
+            }
+        });
+
+        // Charts for DR
+        $('#chart-daily-registration').highcharts({
+            chart: {
+                zoomType: 'x',
+                spacingRight: 20
+            },
+            title: {
+                text: 'Daily New Registration'
+            },
+            subtitle: {
+                text: "Source: <?=$domain?> Timezone: <?=date_default_timezone_get()?>"
+            },
+            xAxis: {
+                type: 'datetime',
+                maxZoom: 14 * 24 * 3600 * 1000,
+                title: {
+                    text: null
+                }
+            },
+            yAxis: [{
+                min: 0,
+                title: {
+                    text: null
+                }
+            }],
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                shared: true
+            },
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                area: {
+                    fillColor: {
+                        linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    lineWidth: 1,
+                    marker: {
+                        enabled: false
+                    },
+                    shadow: false,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
+                }
+            },
+            series: [{
+                type: 'area',
+                name: 'New registration',
+                data: <?=$dr?>
+            }]
+        });
+
+        // Charts for WR
+        $('#chart-weekly-registration').highcharts({
+            chart: {
+                type: 'column',
+                zoomType: 'x',
+                spacingRight: 20
+            },
+            title: {
+                text: 'Weekly New Registration'
+            },
+            subtitle: {
+                text: "Source: <?=$domain?> Timezone: <?=date_default_timezone_get()?>"
+            },
+            xAxis: {
+                type: 'datetime',
+                maxZoom: 14 * 24 * 3600 * 1000,
+                title: {
+                    text: null
+                }
+            },
+            yAxis: [{
+                min: 0,
+                title: {
+                    text: null
+                }
+            }],
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                shared: true
+            },
+            credits: {
+                enabled: false
+            },
+//            plotOptions: {
+//                area: {
+//                    fillColor: {
+//                        linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
+//                        stops: [
+//                            [0, Highcharts.getOptions().colors[0]],
+//                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+//                        ]
+//                    },
+//                    lineWidth: 1,
+//                    marker: {
+//                        enabled: false
+//                    },
+//                    shadow: false,
+//                    states: {
+//                        hover: {
+//                            lineWidth: 1
+//                        }
+//                    },
+//                    threshold: null
+//                }
+//            },
+            series: [{
+//                type: 'area',
+                name: 'New registration',
+                data: <?=$wr?>
+            }]
+        });
+
+        // Charts for MR
+        $('#chart-monthly-registration').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Monthly New Registration'
+            },
+            subtitle: {
+                text: "Source: <?=$domain?> Timezone: <?=date_default_timezone_get()?>"
+            },
+            xAxis: {
+                type: 'datetime',
+                title: {
+                    text: null
+                }
+            },
+            yAxis: [{
+                min: 0,
+                title: {
+                    text: null
+                }
+            }],
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                shared: true,
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: 'New registration',
+                data: <?=$mr?>
+            }]
+        });
+
+        // Charts for DAU
+        $('#chart-daily-active-users').highcharts({
+            chart: {
+                type: 'column',
+                zoomType: 'x',
+                spacingRight: 20
+            },
+            title: {
+                text: 'Daily Active Users'
+            },
+            subtitle: {
+                text: "Source: <?=$domain?> Timezone: <?=date_default_timezone_get()?>"
+            },
+            xAxis: {
+                type: 'datetime',
+                title: {
+                    text: null
+                }
+            },
+            yAxis: [{
+                min: 0,
+                title: {
+                    text: null
+                }
+            }],
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                shared: true
+            },
+            credits: {
+                enabled: false
+            },
+//            plotOptions: {
+//                area: {
+//                    fillColor: {
+//                        linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
+//                        stops: [
+//                            [0, Highcharts.getOptions().colors[0]],
+//                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+//                        ]
+//                    },
+//                    lineWidth: 1,
+//                    marker: {
+//                        enabled: false
+//                    },
+//                    shadow: false,
+//                    states: {
+//                        hover: {
+//                            lineWidth: 1
+//                        }
+//                    },
+//                    threshold: null
+//                }
+//            },
+            series: [{
+//                type: 'area',
+                name: 'Active users',
+                data: <?=$dau?>
+            }]
+        });
+
+        // Charts for MAU
+        $('#chart-monthly-active-users').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Monthly Active Users'
+            },
+            subtitle: {
+                text: "Source: <?=$domain?> Timezone: <?=date_default_timezone_get()?>"
+            },
+            xAxis: {
+                type: 'datetime',
+                title: {
+                    text: null
+                }
+            },
+            yAxis: [{
+                min: 0,
+                title: {
+                    text: null
+                }
+            }],
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                shared: true
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: 'Active users',
+                data: <?=$mau?>
+            }]
+        });
+
+        // Charts for HAU
+        $('#chart-hourly-active-users').highcharts({
+            chart: {
+                zoomType: 'x',
+                spacingRight: 20
+            },
+            title: {
+                text: 'Daily-First-Login Users'
+            },
+            subtitle: {
+                text: "Source: <?=$domain?> Timezone: <?=date_default_timezone_get()?>"
+            },
+            xAxis: {
+                type: 'datetime',
+                maxZoom: 24 * 3600 * 1000,
+                title: {
+                    text: null
+                }
+            },
+            yAxis: [{
+                min: 0,
+                title: {
+                    text: null
+                }
+            }],
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                shared: true
+            },
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                area: {
+                    fillColor: {
+                        linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    lineWidth: 1,
+                    marker: {
+                        enabled: false
+                    },
+                    shadow: false,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
+                }
+            },
+            series: [{
+                type: 'area',
+                name: 'D-F-L users',
+                data: <?=$hau?>
+            }]
+        });
+
+        $("#chart-online-users").highcharts({
+            chart: {
+                type: 'area',
+                zoomType: 'x',
+                animation: Highcharts.svg,
+                marginRight: 10,
+                events: {
+                    load: function() {
+                        var series = this.series;
+
+                        setInterval(function() {
+                            $.post(
+                                '/admin/report/ounow',
+                                function(response) {
+                                    if (response.code == 200) {
+                                        var dt = response.data.dt,
+                                            langs = response.data.langs;
+
+                                        for (var lang in langs) {
+                                            for (var i = 0; i < series.length; i++) {
+                                                if (series[i].name == lang) {
+                                                    series[i].addPoint([dt, langs[lang]], true);
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                'json'
+                            );
+                        }, 300000);
+                    }
+                }
+            },
+            title: {
+                text: 'Online Users'
+            },
+            subtitle: {
+                text: "Source: <?=$domain?> Timezone: <?=date_default_timezone_get()?>"
+            },
+            xAxis: {
+                type: 'datetime',
+                tickmarkPlacement: 'on',
+                maxZoom: 3600 * 1000,
+                title: {
+                    text: null
+                }
+            },
+            yAxis: [{
+                min: 0,
+                title: {
+                    text: 'Total Online Users'
+                }
+            }],
+            tooltip: {
+                headerFormat: '<table><tr style="font-size: 12px"><td colspan="2">{point.key}</td><td style="text-align: right">&nbsp;&nbsp;<b>{point.total:,.0f}</b></td></tr>',
+                pointFormat: '<tr><td style="color:{series.color}">{series.name}:</td><td style="text-align: right"><b>{point.percentage:.1f}%</b></td><td style="text-align: right">{point.y:,.0f}</td></tr>',
+                footerFormat: '</table>',
+                useHTML: true,
+                shared: true
+            },
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                area: {
+                    stacking: 'normal',
+                    lineWidth: 0,
+                    marker: {
+                        enabled: false,
+                        lineColor: '#ffffff'
+                    }
+                }
+            },
+            series: [
+                <?php
+                $lc = count($ou);
+                $i = 0;
+                foreach ($ou as $key => $val) {
+                $i += 1;
+                ?>
+                {
+                    name: '<?=$key?>',
+                    data: <?=$val?>
+                }<?=$i < $lc ? ',' : ''?>
+                <?php } ?>
+            ]
+        });
+    });
+</script>

@@ -1,0 +1,106 @@
+<div class="container">
+    <h1 class="text-center">Point Account List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-10">
+            <form class="form-inline" role="form" method="get" action="/admin/point/list">
+                <div class="form-group">
+                    <label for="user" class="control-label input-sm">User ID</label>
+                    <input type="text" name="user" id="user" class="form-control input-sm" value="<?=isset($filter['user']) ? $filter['user'] : ''?>">
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="order_by_number_desc" value="1" <?=isset($filter['order_by_number_desc']) && $filter['order_by_number_desc'] ? 'checked="checked"' : ''?>> Order By Points
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Points</th>
+                    <th>Updated On</th>
+                    <th>
+                        &nbsp;
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=$row['number']?></td>
+                        <td><?=$row['updated_on'] ? date('Y-m-d H:i', $row['updated_on']) : ''?></td>
+                        <td>
+                            <a href="/admin/point/recharge?user=<?=$row['id']?>" class="btn btn-info btn-sm btn-recharge" data-id="<?=$row['id']?>">Recharge</a>
+                            <a href="/admin/point/log?user=<?=$row['id']?>" target="_blank" class="btn btn-primary btn-sm">Log</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<?php include Yaf_View_Simple::getScriptPath() . DIRECTORY_SEPARATOR . 'point' . DIRECTORY_SEPARATOR . 'modal-recharge.phtml'; ?>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $(".btn-recharge").each(function() {
+            $(this).click(function() {
+                var btn = $(this),
+                    id  = btn.data("id");
+
+                $("#recharge-user").val(id + "");
+
+                $("#recharge-modal").modal("show");
+
+                return false;
+            });
+        });
+
+        $("#submit-recharge").click(function() {
+            var user = $("#recharge-user").val(),
+                points = $("#recharge-points").val();
+
+            $.post(
+                "/admin/point/recharge",
+                {
+                    user: user,
+                    points: points
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        window.alert(response.message);
+
+                        window.location.reload();
+                    } else {
+                        window.alert(response.message ? response.message : "Failed");
+                    }
+                },
+                "json"
+            );
+
+            $("#recharge-modal").modal("hide");
+        });
+    });
+</script>

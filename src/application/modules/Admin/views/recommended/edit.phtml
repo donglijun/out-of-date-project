@@ -1,0 +1,53 @@
+<div class="container">
+    <h1 class="text-center">Recommend Deck</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <form class="form-horizontal" role="form" method="post" action="/admin/recommended/<?=$action?>">
+                <input type="hidden" name="id" id="id" value="<?=isset($id) ? $id : ''?>" />
+                <div class="form-group">
+                    <label for="lang" class="col-sm-2 control-label">Lang</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="lang" name="lang" value="<?=isset($data['lang']) ? $data['lang'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="class" class="col-sm-2 control-label">Class</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="class" name="class" value="<?=isset($data['class']) ? $data['class'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="category" class="col-sm-2 control-label">Category</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="category" name="category" value="<?=isset($data['category']) ? $data['category'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="deck" class="col-sm-2 control-label">Deck ID</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="deck" name="deck" value="<?=isset($data['deck']) ? $data['deck'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="ranking" class="col-sm-2 control-label">Ranking</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="ranking" name="ranking" value="<?=isset($data['ranking']) ? $data['ranking'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="summary" class="col-sm-2 control-label">Summary</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" id="summary" name="summary" rows="3"><?=isset($data['summary']) ? Misc::escape($data['summary']) : ''?></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-10">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="/admin/recommended/list" class="btn btn-default">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

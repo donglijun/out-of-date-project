@@ -1,0 +1,71 @@
+<div class="container">
+    <h1 class="text-center">Goods Log List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-10">
+            <form class="form-inline" role="form" method="get" action="/admin/goods/log">
+                <div class="form-group">
+                    <label for="sender" class="control-label input-sm">Sender ID</label>
+                    <input type="text" name="sender" id="sender" class="form-control input-sm" value="<?=isset($filter['sender']) ? $filter['sender'] : ''?>">
+                </div>
+                <div class="form-group">
+                    <label for="receiver" class="control-label input-sm">Receiver ID</label>
+                    <input type="text" name="receiver" id="receiver" class="form-control input-sm" value="<?=isset($filter['receiver']) ? $filter['receiver'] : ''?>">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Sender</th>
+                    <th>Receiver</th>
+                    <th>Goods</th>
+                    <th>Number</th>
+                    <th>Created On</th>
+                    <th>
+                        &nbsp;
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=$row['sender']?></td>
+                        <td><?=$row['receiver']?></td>
+                        <td><?=$row['goods']?></td>
+                        <td><?=$row['number']?></td>
+                        <td><?=$row['created_on'] ? date('Y-m-d H:i', $row['created_on']) : ''?></td>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+    });
+</script>

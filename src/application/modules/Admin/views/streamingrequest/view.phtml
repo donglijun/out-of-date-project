@@ -1,0 +1,121 @@
+<div class="container">
+    <h1 class="text-center">View Request Info</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/streamingrequest/list" class="btn btn-primary">Requests</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <th>ID</th>
+                    <td><?=isset($data['id']) ? $data['id'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Channel ID</th>
+                    <td><?=isset($data['channel']) ? $data['channel'] : ''?> (<?=isset($data['user_name']) ? Misc::escape($data['user_name']) : ''?>)</td>
+                </tr>
+                <tr>
+                    <th>Small Show Image</th>
+                    <td>
+                        <?php if (isset($data['small_show_image_url'])) { ?>
+                            <img src="<?=$data['small_show_image_url']?>" alt="">
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Large Show Image</th>
+                    <td>
+                        <?php if (isset($data['large_show_image_url'])) { ?>
+                            <img src="<?=$data['large_show_image_url']?>" alt="">
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Created On</th>
+                    <td><?=isset($data['created_on']) ? date('Y-m-d H:i:s', $data['created_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        <?php if ($data['req_status'] == MySQL_Streaming_ShowImageRequestModel::REQ_STATUS_PENDING) { ?>
+                            <span class="label label-default">Pending</span>
+
+                            <a href="/admin/streamingrequest/approve?id=<?=$data['id']?>" class="btn btn-info btn-sm btn-approve" data-id="<?=$data['id']?>">Approve</a>
+                            <a href="/admin/streamingrequest/deny?id=<?=$data['id']?>" class="btn btn-danger btn-sm btn-deny" data-id="<?=$data['id']?>">Deny</a>
+                        <?php } else if ($data['req_status'] == MySQL_Streaming_ShowImageRequestModel::REQ_STATUS_APPROVED) { ?>
+                            <span class="label label-success">Approved</span>
+                        <?php } else if ($data['req_status'] == MySQL_Streaming_ShowImageRequestModel::REQ_STATUS_DENIED) { ?>
+                            <span class="label label-danger">Denied</span>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Processed On</th>
+                    <td><?=isset($data['processed_on']) && $data['processed_on'] ? date('Y-m-d H:i:s', $data['processed_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Processed By</th>
+                    <td><?=isset($data['processed_by']) ? $data['processed_by'] : ''?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $(".btn-approve").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really approve???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/streamingrequest/approve",
+                        {
+                            id: id
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                window.alert(response.message);
+
+                                window.location.reload();
+                            } else {
+                                window.alert(response.message ? response.message : "Failed");
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+
+        $(".btn-deny").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really deny???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/streamingrequest/deny",
+                        {
+                            id: id
+                        },
+                        function(response) {
+                            window.location.reload();
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+    });
+</script>

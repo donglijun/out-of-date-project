@@ -1,0 +1,110 @@
+<div class="container">
+    <h1 class="text-center">League Match</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <a href="/admin/leaguematch/create" class="btn btn-primary">New</a>
+        </div>
+        <div class="col-md-10">
+            <form class="form-inline" role="form" method="get" action="/admin/leaguematch/list">
+                <div class="form-group">
+                    <label for="season" class="control-label input-sm">Season</label>
+                    <select id="season" name="season" class="form-control input-sm">
+                        <option value=""></option>
+                        <?php foreach ($seasons as $key => $val) { ?>
+                            <option value="<?=$val['id']?>" <?=(isset($filter['season']) && $val['id']==$filter['season']) ? 'selected="selected"' : ''?>><?=Misc::escape($val['title'])?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="schedule" class="control-label input-sm">Schedule</label>
+                    <select id="schedule" name="schedule" class="form-control input-sm">
+                        <?php foreach ($schedules as $key => $val) { ?>
+                            <option value="<?=$val['id']?>" <?=(isset($filter['schedule']) && $val['id']==$filter['schedule']) ? 'selected="selected"' : ''?>><?=Misc::escape($val['title'])?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Season</th>
+                    <th>Schedule</th>
+                    <th>Group</th>
+                    <th>Team1</th>
+                    <th>Team2</th>
+                    <th>Winner</th>
+                    <th>Datetime</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=isset($seasons[$row['season']]) ? $seasons[$row['season']]['title'] : $row['season']?></td>
+                        <td><?=isset($schedules[$row['schedule']]) ? $schedules[$row['schedule']]['title'] : $row['schedule']?></td>
+                        <td><?=$row['group_tag'] ?: '-'?></td>
+                        <td><?=isset($teamTitles[$row['team1']]) ? $teamTitles[$row['team1']] : $row['team1']?></td>
+                        <td><?=isset($teamTitles[$row['team2']]) ? $teamTitles[$row['team2']] : $row['team2']?></td>
+                        <td><?=isset($teamTitles[$row['winner']]) ? $teamTitles[$row['winner']] : $row['winner']?></td>
+                        <td><?=date('Y-m-d H:i', $row['datetime'])?></td>
+                        <td>
+                            <a href="/admin/leaguematch/update?id=<?=$row['id']?>" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="/admin/leaguematch/delete?ids=<?=$row['id']?>" class="btn btn-danger btn-sm btn-delete" data-id="<?=$row['id']?>">Delete</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $(".btn-delete").click(function() {
+            return window.confirm('Really???');
+        });
+
+        $("#season").change(function() {
+            var season = $(this).val();
+            $("#schedule").empty();
+
+            $.get(
+                '/admin/leaguematch/get_schedules_by_season',
+                {
+                    season: season
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        var data = response.data;
+
+                        for (var key in response.data) {
+                            var option = $("<option>").val(data[key].id).text(data[key].title);
+                            $("#schedule").append(option);
+                        }
+                    }
+                },
+                'json'
+            );
+        });
+    });
+</script>

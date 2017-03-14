@@ -1,0 +1,53 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-4 col-md-5">
+            <div class="panel panel-default" style="margin: 60px auto;">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Reset your password</h3>
+                </div>
+                <div class="panel-body">
+                    <form role="form" method="post" id="resetform">
+                        <div class="form-group">
+                            <label for="name" class="control-label">Username</label>
+                            <input type="text" class="form-control" id="name" name="name" value="<?=isset($name) ? $name : ''?>">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-default">Send Instructions</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <pre id="result"></pre>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#name").focus();
+
+        $("#resetform").submit(function() {
+            var name = $("#name").val();
+
+            $.post(
+                '/passport/user/reset_password',
+                {
+                    name: name
+                },
+                function(res) {
+                    if (res.code == 200) {
+//                        window.location.href = '/passport/test/profile';
+                    }
+
+                    $("#result").text(JSON.stringify(res));
+                    alert(JSON.stringify(res));
+                },
+                'json'
+            );
+
+            return false;
+        });
+    });
+</script>

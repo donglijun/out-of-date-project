@@ -1,0 +1,227 @@
+<div class="container">
+    <h1 class="text-center">Streaming Application</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            &nbsp;
+        </div>
+        <div class="col-md-10">
+            <form class="form-inline" role="form" method="get" action="/admin/streamingapplication/list">
+                <div class="form-group">
+                    <label for="channel" class="control-label input-sm">Channel ID</label>
+                    <input type="text" name="channel" id="channel" class="form-control input-sm" value="<?=isset($filter['channel']) ? $filter['channel'] : ''?>">
+                </div>
+                <div class="form-group">
+                    <label for="app_type" class="control-label input-sm">Type</label>
+                    <select name="app_type" class="form-control input-sm">
+                        <option value="">All</option>
+                        <option value="<?=MySQL_Streaming_ApplicationModel::APP_TYPE_SIGNED?>" <?=(isset($filter['app_type']) && ($filter['app_type'] == MySQL_Streaming_ApplicationModel::APP_TYPE_SIGNED)) ? 'selected="selected"' : ''?>>Signed</option>
+                        <option value="<?=MySQL_Streaming_ApplicationModel::APP_TYPE_EXCLUSIVE?>" <?=(isset($filter['app_type']) && ($filter['app_type'] == MySQL_Streaming_ApplicationModel::APP_TYPE_EXCLUSIVE)) ? 'selected="selected"' : ''?>>Exclusive</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Channel</th>
+                    <th>Class</th>
+                    <th>Type</th>
+                    <th>Memo</th>
+                    <th>Status</th>
+                    <th>Created On</th>
+                    <th>Processed On</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=$row['channel']?> (<?=Misc::escape($row['user_name'])?>)</td>
+                        <td><?=isset($row['class_title']) ? $row['class_title'] : ''?></td>
+                        <td>
+                            <?php if ($row['app_type'] == MySQL_Streaming_ApplicationModel::APP_TYPE_SIGNED) { ?>
+                                <span class="label label-primary">Signed</span>
+                            <?php } else if ($row['app_type'] == MySQL_Streaming_ApplicationModel::APP_TYPE_EXCLUSIVE) { ?>
+                                <span class="label label-info">Exclusive</span>
+                            <?php } ?>
+                        </td>
+                        <td>
+                            <div style="width: 190px; height: 80px; overflow: auto;">
+                                <pre id="memo-<?=$row['id']?>"><?=Misc::escape($row['memo'])?></pre>
+                            </div>
+                        </td>
+                        <td>
+                            <?php if ($row['app_status'] == MySQL_Streaming_ApplicationModel::APP_STATUS_PENDING) { ?>
+                                <span class="label label-default">Pending</span>
+                            <?php } else if ($row['app_status'] == MySQL_Streaming_ApplicationModel::APP_STATUS_APPROVED) { ?>
+                                <span class="label label-success">Approved</span>
+                            <?php } else if ($row['app_status'] == MySQL_Streaming_ApplicationModel::APP_STATUS_DENIED) { ?>
+                                <span class="label label-danger">Denied</span>
+                            <?php } ?>
+                        </td>
+                        <td><?=date('Y-m-d H:i', $row['created_on'])?></td>
+                        <td><?=$row['processed_on'] ? date('Y-m-d H:i', $row['processed_on']) : ''?></td>
+                        <td>
+                            <a href="/admin/streamingapplication/view?id=<?=$row['id']?>" class="btn btn-primary btn-sm" target="_blank">View</a>
+                            <?php if ($row['app_status'] == MySQL_Streaming_ApplicationModel::APP_STATUS_PENDING) { ?>
+                            <a href="/admin/streamingapplication/approve?id=<?=$row['id']?>" class="btn btn-info btn-sm btn-approve" data-id="<?=$row['id']?>">Approve</a>
+                            <a href="/admin/streamingapplication/deny?id=<?=$row['id']?>" class="btn btn-danger btn-sm btn-deny" data-id="<?=$row['id']?>">Deny</a>
+                            <?php } ?>
+                            <button type="button" class="btn btn-warning btn-sm btn-memo" data-id="<?=$row['id']?>">Memo</button>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<?php include Yaf_View_Simple::getScriptPath() . DIRECTORY_SEPARATOR . 'streamingapplication' . DIRECTORY_SEPARATOR . 'modal-approve.phtml'; ?>
+
+<?php include Yaf_View_Simple::getScriptPath() . DIRECTORY_SEPARATOR . 'streamingchannel' . DIRECTORY_SEPARATOR . 'modal-memo.phtml'; ?>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $(".btn-approve").each(function() {
+//            $(this).click(function() {
+//                var btn = $(this),
+//                    id  = btn.data("id");
+//
+//                $("#approve-app-id").val(id + "");
+//
+//                $("#approve-modal").modal("show");
+//
+//                return false;
+//            });
+
+            $(this).click(function() {
+                if (window.confirm('Really approve???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/streamingapplication/approve",
+                        {
+                            id: id
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                window.alert(response.message);
+
+                                window.location.reload();
+                            } else {
+                                window.alert(response.message ? response.message : "Failed");
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+
+//        $("#submit-approve").click(function() {
+//            var app = $("#approve-app-id").val(),
+//                channel_class = $("#approve-channel-class").val();
+//
+//            $.post(
+//                "/admin/streamingapplication/approve",
+//                {
+//                    id: app,
+//                    class: channel_class
+//                },
+//                function(response) {
+//                    if (response.code == 200) {
+//                        window.alert(response.message);
+//
+//                        window.location.reload();
+//                    } else {
+//                        window.alert(response.message ? response.message : "Failed");
+//                    }
+//                },
+//                "json"
+//            );
+//
+//            $("#approve-modal").modal("hide");
+//        });
+
+        $(".btn-deny").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really deny???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/streamingapplication/deny",
+                        {
+                            id: id
+                        },
+                        function(response) {
+                            window.location.reload();
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+
+        $(".btn-memo").each(function() {
+            $(this).click(function() {
+                var btn = $(this),
+                    id  = btn.data("id");
+
+                $("#input-channel-memo").val($("#memo-"+id).text());
+                $("#memo-channel").val(id);
+
+                $("#memo-modal").modal("show");
+
+                return false;
+            });
+        });
+
+        $("#save-memo").click(function() {
+            var id = $("#memo-channel").val(),
+                memo = $("#input-channel-memo").val();
+
+            $.post(
+                "/admin/streamingapplication/memo",
+                {
+                    id: id,
+                    memo: memo
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        $("#memo-"+id).text(memo);
+                    } else {
+                        window.alert("Failed");
+                    }
+                },
+                "json"
+            );
+
+            $("#memo-modal").modal("hide");
+        });
+    });
+</script>

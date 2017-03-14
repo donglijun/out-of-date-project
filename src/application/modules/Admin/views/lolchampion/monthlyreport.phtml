@@ -1,0 +1,80 @@
+<div class="container">
+    <h1 class="text-center">Monthly Report</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-inline" role="form" method="get" action="/admin/lolchampion/monthlyreport">
+                <div class="form-group">
+                    <label for="platform" class="control-label input-sm">Platform</label>
+                    <select name="platform" class="form-control input-sm">
+                        <?php foreach ($platforms as $key => $val) { ?>
+                            <option value="<?=$key?>" <?=(isset($filter['platform']) && (strcasecmp($key, $filter['platform']) === 0)) ? 'selected="selected"' : ''?>><?=strtoupper($key) . ' - ' . $val?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date" class="control-label input-sm">Date</label>
+                    <select name="date" class="form-control input-sm">
+                        <?php if (isset($dates)) {foreach ($dates as $key => $val) { ?>
+                            <option value="<?=$val?>" <?=(isset($filter['date']) && $val==$filter['date']) ? 'selected="selected"' : ''?>><?=$val?></option>
+                        <?php }} ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="champion" class="control-label input-sm">Champion</label>
+                    <select name="champion" class="form-control input-sm">
+                        <option value="">All</option>
+                        <?php foreach ($champions as $key => $val) { ?>
+                            <option value="<?=$key?>" <?=(isset($filter['champion']) && $key==$filter['champion']) ? 'selected="selected"' : ''?>><?=$val?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Champion</th>
+                    <th>Mode</th>
+                    <th>Total</th>
+                    <th>Win</th>
+                    <th>Win Rate</th>
+                    <th>Lose</th>
+                    <th>Ranked Total</th>
+                    <th>Ranked Pick</th>
+                    <th>Ranked Pick Rate</th>
+                    <th>Ranked Ban</th>
+                    <th>Ranked Ban Rate</th>
+                    <th>Updated on</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                if (isset($data)) { foreach ($data as $row) {
+                    ?>
+                    <tr>
+                        <td><?=$row['date']?></td>
+                        <td><?=isset($champions[$row['champion']]) ? Misc::escape($champions[$row['champion']]) : $row['champion']?></td>
+                        <td><?=isset($modes[$row['mode']]) ? Misc::escape($modes[$row['mode']]) : $row['mode']?></td>
+                        <td><?=$row['total']?></td>
+                        <td><?=$row['win']?></td>
+                        <td><?=sprintf('%.1f%%', $row['win_rate'] * 100)?></td>
+                        <td><?=$row['lose']?></td>
+                        <td><?=$row['ranked_total']?></td>
+                        <td><?=$row['ranked_pick']?></td>
+                        <td><?=sprintf('%.1f%%', $row['ranked_pick_rate'] * 100)?></td>
+                        <td><?=$row['ranked_ban']?></td>
+                        <td><?=sprintf('%.1f%%', $row['ranked_ban_rate'] * 100)?></td>
+                        <td><?=date('Y-m-d H:i', $row['updated_on'])?></td>
+                    </tr>
+                <?php }} ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

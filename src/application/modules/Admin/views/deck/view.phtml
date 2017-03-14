@@ -1,0 +1,168 @@
+<div class="container">
+    <h1 class="text-center">Deck Detail</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/deck/list" class="btn btn-primary">Deck List</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <th>ID</th>
+                    <td><?=isset($data['id']) ? $data['id'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>User</th>
+                    <td><?=isset($data['user']) ? $data['user'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Title</th>
+                    <td><?=isset($data['title']) ? Misc::escape($data['title']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Created on</th>
+                    <td><?=isset($data['created_on']) ? date('Y-m-d H:i', $data['created_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Modified on</th>
+                    <td><?=isset($data['modified_on']) ? date('Y-m-d H:i', $data['modified_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Game version</th>
+                    <td><?=isset($data['game_version']) ? $data['game_version'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td><?=isset($data['category']) ? $data['category'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Class</th>
+                    <td><?=isset($data['class']) ? $data['class'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Distribution</th>
+                    <td>
+                        <span class="label label-info">Ability <span class="badge"><?=isset($data['distribution']) ? $data['distribution']['a'] : ''?></span></span>
+                        <span class="label label-info">Minion <span class="badge"><?=isset($data['distribution']) ? $data['distribution']['m'] : ''?></span></span>
+                        <span class="label label-info">Weapon <span class="badge"><?=isset($data['distribution']) ? $data['distribution']['w'] : ''?></span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Card count</th>
+                    <td><?=isset($data['ncards']) ? $data['ncards'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Lang</th>
+                    <td><?=isset($data['lang']) ? $data['lang'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Cards</th>
+                    <td>
+                        <?php if (isset($data['cards'])) { foreach ($data['cards'] as $card) { ?>
+                            <span class="label <?=$card['k'] ? 'label-warning' : 'label-info'?>"><?=$card['i']?> <span class="badge"><?=$card['c']?></span></span>
+                        <?php }} ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Checksum</th>
+                    <td><?=isset($data['checksum']) ? $data['checksum'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Public</th>
+                    <td><?=isset($data['is_public']) ? $data['is_public'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Favorites</th>
+                    <td><?=isset($data['favorites']) ? $data['favorites'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Comments</th>
+                    <td><?=isset($data['comments']) ? $data['comments'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Views</th>
+                    <td><?=isset($data['views']) ? $data['views'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Source</th>
+                    <td><?=isset($data['source']) ? Misc::escape($data['source']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Source url</th>
+                    <td><?=isset($data['source_url']) ? Misc::escape($data['source_url']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Author</th>
+                    <td><?=isset($data['author']) ? Misc::escape($data['author']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td><?=isset($data['description']) ? nl2br(Misc::escape($data['description'])) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Rarity Distribution</th>
+                    <td>
+                        <?php foreach ($data['distr_rarity'] as $key => $val) { ?>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="<?=ceil($val * 100 / 30)?>" aria-valuemin="0" aria-valuemax="100" style="width: <?=ceil($val * 100 / 30)?>%;">
+                                <span class="pull-left"><?=$rarityMap[$key]?> (<?=$val?>)</span>
+                            </div>
+                        </div>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Type Distribution</th>
+                    <td>
+                        <?php foreach ($data['distr_type'] as $key => $val) { ?>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="<?=ceil($val * 100 / 30)?>" aria-valuemin="0" aria-valuemax="100" style="width: <?=ceil($val * 100 / 30)?>%;">
+                                <span class="pull-left"><?=$typeMap[$key]?> (<?=$val?>)</span>
+                            </div>
+                        </div>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Cost Distribution</th>
+                    <td>
+                        <?php foreach ($data['distr_cost'] as $key => $val) { ?>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="<?=ceil($val * 100 / 30)?>" aria-valuemin="0" aria-valuemax="100" style="width: <?=ceil($val * 100 / 30)?>%;">
+                                    <span class="pull-left">Cost<?=$key?> (<?=$val?>)</span>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Attack Distribution</th>
+                    <td>
+                        <?php foreach ($data['distr_attack'] as $key => $val) { ?>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="<?=ceil($val * 100 / 30)?>" aria-valuemin="0" aria-valuemax="100" style="width: <?=ceil($val * 100 / 30)?>%;">
+                                    <span class="pull-left">Attack<?=$key?> (<?=$val?>)</span>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Health Distribution</th>
+                    <td>
+                        <?php foreach ($data['distr_health'] as $key => $val) { ?>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="<?=ceil($val * 100 / 30)?>" aria-valuemin="0" aria-valuemax="100" style="width: <?=ceil($val * 100 / 30)?>%;">
+                                    <span class="pull-left">Health<?=$key?> (<?=$val?>)</span>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

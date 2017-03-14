@@ -1,0 +1,78 @@
+<div class="container">
+    <h1 class="text-center">View Broadcast Highlight Info</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/streamingbroadcasthighlight/list" class="btn btn-primary">Broadcast Highlight List</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <th>Broadcast ID</th>
+                    <td><?=isset($data['id']) ? $data['id'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Channel ID</th>
+                    <td><?=isset($data['channel']) ? $data['channel'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Broadcast ID</th>
+                    <td><?=isset($data['broadcast']) ? $data['broadcast'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Start Position</th>
+                    <td><?=isset($data['start']) ? $data['start'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Stop Position</th>
+                    <td><?=isset($data['stop']) ? $data['stop'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Length</th>
+                    <td><?=isset($data['length']) ? Misc::formatTimeLength($data['length']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Size</th>
+                    <td><?=isset($data['size']) ? number_format($data['size']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Title</th>
+                    <td><?=isset($data['title']) ? Misc::escape($data['title']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Memo</th>
+                    <td>
+                        <pre><?=isset($data['memo']) ? Misc::escape($data['memo']) : ''?></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Submitted On</th>
+                    <td><?=isset($data['submitted_on']) && $data['submitted_on'] ? date('Y-m-d H:i:s', $data['submitted_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Uploaded On</th>
+                    <td><?=isset($data['uploaded_on']) && $data['uploaded_on'] ? date('Y-m-d H:i:s', $data['uploaded_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Remote Path</th>
+                    <td><?=isset($data['remote_path']) ? Misc::escape($data['remote_path']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Preview Path</th>
+                    <td><?=isset($data['preview_path']) ? Misc::escape($data['preview_path']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Total Views</th>
+                    <td><?=isset($data['total_views']) ? $data['total_views'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Hidden</th>
+                    <td><?=isset($data['is_hidden']) && $data['is_hidden'] ? 'Y' : 'N'?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

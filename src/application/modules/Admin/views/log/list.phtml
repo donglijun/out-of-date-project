@@ -1,0 +1,84 @@
+<div class="container">
+    <h1 class="text-center">Admin Log</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-inline" role="form" method="get" action="/admin/log/list">
+                <div class="form-group">
+                    <label for="user" class="control-label input-sm">User</label>
+                    <input type="text" class="form-control input-sm" id="user" name="user" value="<?=isset($filter['user']) ? $filter['user'] : ''?>">
+                </div>
+                <div class="form-group">
+                    <label for="from" class="control-label input-sm">From</label>
+                    <input type="text" class="form-control input-sm" id="from" name="from" value="">
+                </div>
+                <div class="form-group">
+                    <label for="to" class="control-label input-sm">To</label>
+                    <input type="text" class="form-control input-sm" id="to" name="to" value="">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Content</th>
+                    <th>Logged on</th>
+                    <th>Logged IP</th>
+                    <th>Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr>
+                        <td><?=$row['id']?></td>
+                        <td><?=$row['user']?></td>
+                        <td><?=$row['action']?></td>
+                        <td><pre><?=json_encode(json_decode($row['content']), JSON_HEX_TAG | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)?></pre></td>
+                        <td><?=isset($row['logged_on']) ? date('Y-m-d H:i', $row['logged_on']) : ''?></td>
+                        <td><?=$row['logged_ip']?></td>
+                        <td>
+                            <a href="#" class="btn btn-danger btn-sm" onclick="window.alert('No way!!!');return false;">Delete</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#from").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#to").datepicker("option", "minDate", selectedDate);
+            }
+        });
+
+        $("#from").datepicker("setDate", "<?=isset($filter['from']) && $filter['from'] ? $filter['from'] : date('Y-m-d', strtotime('-1 day'))?>");
+
+        $("#to").datepicker({
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            onClose: function(selectedDate) {
+                $("#from").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        $("#to").datepicker("setDate", "<?=isset($filter['to']) && $filter['to'] ? $filter['to'] : date('Y-m-d')?>");
+    });
+</script>

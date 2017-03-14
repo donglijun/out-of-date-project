@@ -1,0 +1,139 @@
+<!DOCTYPE html><!--[if lt IE 7]>
+<html class="ie6"><![endif]--><!--[if IE 7]>
+<html class="ie7"><![endif]--><!--[if IE 8]>
+<html class="ie8"><![endif]--><!--[if IE 9]>
+<html class="ie9"><![endif]--><!--[if gt IE 9]><!-->
+<html><!--<![endif]-->
+<style>.file {
+        position: relative;
+        display: inline-block;
+        background: #519032;
+        border: 1px solid #519032;
+
+        padding: 2px 12px 2px 12px;
+        overflow: hidden;
+        color: #FFF;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+    }
+
+    .file input {
+        position: absolute;
+        font-size: 120px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+    }
+
+    .file:hover {
+        background: #519032;
+        border-color: #519032;
+        color: #FFF;
+        text-decoration: none;
+    }</style>
+<head>
+    <meta charset="utf-8">
+    <title><?=$channelInfo['title'] ? Misc::escape($channelInfo['title']) . ' - Nikksy' : 'Nikksy'?></title>
+    <meta name="keywords" content="">
+    <meta name="description" content="Türkiye'nin İlk E-Spor Kanalı">
+    <meta content="1560537774164405" property="fb:app_id">
+    <meta content="Nikksy" property="og:site_name">
+    <meta content="<?=$channelInfo['channel']?>" property="nikksy:channel">
+    <meta content="<?=Misc::escape($channelInfo['title'])?>" property="og:title">
+    <meta content="<?=$channelInfo['avatar'] ? 'https://s3.nikksy.com/' . $channelInfo['avatar'] : '/images/default_avatar.png'?>" property="og:image">
+    <meta content="website" property="og:type">
+    <!--meta content="http://www.nikksy.com/player/3.0-live/nksplayer_3.2.0.15.swf?channel=<?=$channelInfo['channel']?>&sa=85.195.73.188&lang=tr&autostart=true" property="og:video"-->
+    <!--meta content="https://www.nikksy.com/player/3.0-live/nksplayer_3.2.0.15.swf?channel=<?=$channelInfo['channel']?>&sa=85.195.73.188&lang=tr&autostart=true" property="og:video:secure_url"-->
+    <!--meta content="application/x-shockwave-flash" property="og:video:type"-->
+    <!--meta content="480" property="og:video:width"-->
+    <!--meta content="360" property="og:video:height"-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!--[if lt IE 9]>
+    <script src="/js/html5.js"></script><![endif]-->
+    <link rel="stylesheet" href="/uc/files/main.min.css">
+    <link rel="stylesheet" href="/v3/files/main.v3.min.css">
+    <script src="/js/head.load.min.js" data-headjs-load="/v3/files/loader_v3.js"></script>
+</head>
+<body class="live">
+<div class="live-wrap">
+    <aside class="nav"></aside>
+    <section class="video-wrap">
+        <div class="nano">
+            <div class="nano-content">
+                <div class="video-cont">
+                    <header>
+                        <h1 class="live-title"></h1>
+                        <img id="room_avatar" src="<?=$channelInfo['avatar'] ? '//s3.nikksy.com/' . $channelInfo['avatar'] : '/images/default_avatar.png'?>" width="32" height="32" class="imgRadius">
+                        <span class="live-author"></span>
+                        <span class="my-fb">
+                            <a href="" target="_blank"></a>
+                            <div class="fb-like" data-href="" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+                        </span>
+                        <span class="live-views"></span>
+                        <span class="watching-now"></span>
+                        <span class="live-follower-number"></span>
+                        <span class="live-gift-number"></span>
+                        <a href="" class="more-list" target="_blank">Videolar</a>
+                        <span class="followclass"></span>
+                    </header>
+                    <div class="video"></div>
+                    <div class="gifts-bar"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <aside class="sidebar"></aside>
+</div>
+<script>
+    // google for ....................
+    mData = window.mData || [];
+    mData.push(['setAPP', 444951360]);
+    (function(d){
+        var version = new Date().getTime();
+        var js,id='cxg-mdatasdk',ref=d.getElementsByTagName('script')[0];
+        if(d.getElementById(id)){return;};
+        js=d.createElement('script');
+        js.id=id;
+        js.async=true;
+        js.src="//cdn.gooogleyahooo.net/static/package/md.js?version=" + version;
+        ref.parentNode.insertBefore(js,ref);
+    }(document));
+    mData.push(['send','visit',{}]);
+</script>
+
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-57615257-1', 'auto');
+    ga('require', 'displayfeatures');
+    ga('send', 'pageview');
+</script>
+
+<!-- Piwik -->
+<script type="text/javascript">
+    var _paq = _paq || [];
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+        var u="//piwik.nikksy.com/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+    })();
+</script>
+<noscript><p><img src="//piwik.nikksy.com/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+<!-- End Piwik Code -->
+</body>
+</html>

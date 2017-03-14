@@ -1,0 +1,75 @@
+<div class="container">
+    <h1 class="text-center">League Match Schedule</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <a href="/admin/leaguematchschedule/create" class="btn btn-primary">New</a>
+        </div>
+        <div class="col-md-10">
+            <form class="form-inline" role="form" method="get" action="/admin/leaguematchschedule/list">
+                <div class="form-group">
+                    <label for="season" class="control-label input-sm">Season</label>
+                    <select name="season" class="form-control input-sm">
+                        <option value="">All</option>
+                        <?php foreach ($seasons as $key => $val) { ?>
+                            <option value="<?=$val['id']?>" <?=(isset($filter['season']) && $val['id']==$filter['season']) ? 'selected="selected"' : ''?>><?=Misc::escape($val['title'])?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Season</th>
+                    <th>Title</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Created On</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=isset($seasons[$row['season']]) ? $seasons[$row['season']]['title'] : $row['season']?></td>
+                        <td><?=Misc::escape($row['title'])?></td>
+                        <td><?=date('Y-m-d H:i', $row['from'])?></td>
+                        <td><?=date('Y-m-d H:i', $row['to'])?></td>
+                        <td><?=date('Y-m-d H:i', $row['created_on'])?></td>
+                        <td>
+                            <a href="/admin/leaguematchschedule/update?id=<?=$row['id']?>" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="/admin/leaguematchschedule/delete?ids=<?=$row['id']?>" class="btn btn-danger btn-sm btn-delete" data-id="<?=$row['id']?>">Delete</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $(".btn-delete").click(function() {
+            return window.confirm('Really???');
+        });
+    });
+</script>

@@ -1,0 +1,196 @@
+<div class="container">
+    <h1 class="text-center">League Application</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            &nbsp;
+        </div>
+        <div class="col-md-10">
+            <form class="form-inline" role="form" method="get" action="/admin/leagueapplication/list">
+                <div class="form-group">
+                    <label for="season" class="control-label input-sm">Season</label>
+                    <select name="season" class="form-control input-sm">
+                        <option value="">All</option>
+                        <?php foreach ($seasons as $row) { ?>
+                        <option value="<?=$row['id']?>" <?=(isset($filter['season']) && ($filter['season'] == $row['id'])) ? 'selected="selected"' : ''?>><?=Misc::escape($row['title'])?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="app_status" class="control-label input-sm">Status</label>
+                    <select name="app_status" class="form-control input-sm">
+                        <option value="">All</option>
+                        <option value="<?=MySQL_League_ApplicationModel::APP_STATUS_PENDING?>" <?=(isset($filter['app_status']) && ($filter['app_status'] !== '') && ((int) $filter['app_status'] === MySQL_League_ApplicationModel::APP_STATUS_PENDING)) ? 'selected="selected"' : ''?>>Pending</option>
+                        <option value="<?=MySQL_League_ApplicationModel::APP_STATUS_APPROVED?>" <?=(isset($filter['app_status']) && ((int) $filter['app_status'] === MySQL_League_ApplicationModel::APP_STATUS_APPROVED)) ? 'selected="selected"' : ''?>>Approved</option>
+                        <option value="<?=MySQL_League_ApplicationModel::APP_STATUS_DENIED?>" <?=(isset($filter['app_status']) && ((int) $filter['app_status'] === MySQL_League_ApplicationModel::APP_STATUS_DENIED)) ? 'selected="selected"' : ''?>>Denied</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Season</th>
+                    <th>Title</th>
+                    <th>Leader Name</th>
+                    <th>Memo</th>
+                    <th>Status</th>
+                    <th>Created On</th>
+                    <th>Created By</th>
+                    <th>Processed On</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=Misc::escape($seasons[$row['season']]['title'])?></td>
+                        <td><?=Misc::escape($row['title'])?></td>
+                        <td><?=Misc::escape($row['leader_name'])?></td>
+                        <td>
+                            <div style="width: 190px; height: 80px; overflow: auto;">
+                                <pre id="memo-<?=$row['id']?>"><?=Misc::escape($row['memo'])?></pre>
+                            </div>
+                        </td>
+                        <td>
+                            <?php if ($row['app_status'] == MySQL_League_ApplicationModel::APP_STATUS_PENDING) { ?>
+                                <span class="label label-default">Pending</span>
+                            <?php } else if ($row['app_status'] == MySQL_League_ApplicationModel::APP_STATUS_APPROVED) { ?>
+                                <span class="label label-success">Approved</span>
+                            <?php } else if ($row['app_status'] == MySQL_League_ApplicationModel::APP_STATUS_DENIED) { ?>
+                                <span class="label label-danger label-deny" data-placement="bottom" data-title="<?=Misc::escape($row['reason'])?>">Denied</span>
+                            <?php } ?>
+                        </td>
+                        <td><?=date('Y-m-d H:i', $row['created_on'])?></td>
+                        <td><a href="/admin/user/view?user=<?=$row['created_by']?>" target="_blank"><?=$row['created_by']?></a></td>
+                        <td><?=$row['processed_on'] ? date('Y-m-d H:i', $row['processed_on']) : ''?></td>
+                        <td>
+                            <a href="/admin/leagueapplication/view?id=<?=$row['id']?>" class="btn btn-primary btn-sm" target="_blank">View</a>
+                            <?php if ($row['app_status'] == MySQL_League_ApplicationModel::APP_STATUS_PENDING) { ?>
+                                <a href="/admin/leagueapplication/approve?id=<?=$row['id']?>" class="btn btn-info btn-sm btn-approve" data-id="<?=$row['id']?>">Approve</a>
+                                <a href="/admin/leagueapplication/deny?id=<?=$row['id']?>" class="btn btn-danger btn-sm btn-deny" data-id="<?=$row['id']?>">Deny</a>
+                            <?php } ?>
+                            <button type="button" class="btn btn-warning btn-sm btn-memo" data-id="<?=$row['id']?>">Memo</button>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<?php include Yaf_View_Simple::getScriptPath() . DIRECTORY_SEPARATOR . 'streamingchannel' . DIRECTORY_SEPARATOR . 'modal-memo.phtml'; ?>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $(".label-deny").tooltip();
+
+        $(".btn-approve").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really approve???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/leagueapplication/approve",
+                        {
+                            id: id
+                        },
+                        function(response) {
+                            if (response.code == 200) {
+                                window.alert(response.message);
+
+                                window.location.reload();
+                            } else {
+                                window.alert(response.message ? response.message : "Failed");
+                            }
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+
+        $(".btn-deny").each(function() {
+            $(this).click(function() {
+                var reason = window.prompt("Why is rejected?", "");
+
+                if ((reason != null) && (reason != "")) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/leagueapplication/deny",
+                        {
+                            id: id,
+                            reason: reason
+                        },
+                        function(response) {
+                            window.location.reload();
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+
+        $(".btn-memo").each(function() {
+            $(this).click(function() {
+                var btn = $(this),
+                    id  = btn.data("id");
+
+                $("#input-channel-memo").val($("#memo-"+id).text());
+                $("#memo-channel").val(id);
+
+                $("#memo-modal").modal("show");
+
+                return false;
+            });
+        });
+
+        $("#save-memo").click(function() {
+            var id = $("#memo-channel").val(),
+                memo = $("#input-channel-memo").val();
+
+            $.post(
+                "/admin/leagueapplication/memo",
+                {
+                    id: id,
+                    memo: memo
+                },
+                function(response) {
+                    if (response.code == 200) {
+                        $("#memo-"+id).text(memo);
+                    } else {
+                        window.alert("Failed");
+                    }
+                },
+                "json"
+            );
+
+            $("#memo-modal").modal("hide");
+        });
+    });
+</script>

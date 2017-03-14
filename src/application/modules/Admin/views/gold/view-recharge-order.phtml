@@ -1,0 +1,60 @@
+<div class="container">
+    <h1 class="text-center">View Recharge Order Info</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/gold/recharge_orders" class="btn btn-primary">Recharge Order List</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <th>Order ID</th>
+                    <td><?=isset($data['id']) ? $data['id'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Foreign Order ID</th>
+                    <td><?=isset($data['foreign_id']) ? $data['foreign_id'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>User ID</th>
+                    <td><?=isset($data['user']) ? $data['user'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Golds</th>
+                    <td><?=isset($data['golds']) ? $data['golds'] : 0?></td>
+                </tr>
+                <tr>
+                    <th>Cost</th>
+                    <td><?=isset($data['cost']) ? $data['cost'] . $data['cost_unit'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Foreign Timestamp</th>
+                    <td><?=isset($data['foreign_timestamp']) && $data['foreign_timestamp'] ? date('Y-m-d H:i:s', $data['foreign_timestamp']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Processed</th>
+                    <td><?=isset($data['is_processed']) ? $data['is_processed'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Bad</th>
+                    <td><?=isset($data['is_bad']) ? $data['is_bad'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Created On</th>
+                    <td><?=isset($data['created_on']) && $data['created_on'] ? date('Y-m-d H:i:s', $data['created_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Processed On</th>
+                    <td><?=isset($data['processed_on']) && $data['processed_on'] ? date('Y-m-d H:i:s', $data['processed_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Bad On</th>
+                    <td><?=isset($data['bad_on']) && $data['bad_on'] ? date('Y-m-d H:i:s', $data['bad_on']) : ''?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

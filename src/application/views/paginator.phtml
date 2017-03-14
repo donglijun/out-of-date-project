@@ -1,0 +1,19 @@
+<ul class="pagination pull-right">
+    <li class="<?php if (!isset($paginator->getPages()->previous)) { ?>disabled<?php } ?>">
+        <a href="<?= isset($paginator->getPages()->previous) ? strtr($pageUrlPattern, array('0page0' => $paginator->getPages()->first)) : '#'?>">&laquo;</a>
+    </li>
+    <li class="<?php if (!isset($paginator->getPages()->previous)) { ?>disabled<?php } ?>">
+        <a href="<?= isset($paginator->getPages()->previous) ? strtr($pageUrlPattern, array('0page0' => $paginator->getPages()->previous)) : '#'?>">&lsaquo;</a>
+    </li>
+    <?php foreach ($paginator->getPages()->pagesInRange as $page) { ?>
+    <li class="<?= ($page == $paginator->getPages()->current) ? 'active' : ''; ?>">
+        <a href="<?= ($page != $paginator->getPages()->current) ? strtr($pageUrlPattern, array('0page0' => $page)) : '#'?>"><?=$page?><?php if ($page == $paginator->getPages()->current) { ?><span class="sr-only">(current)</span><?php } ?></a>
+    </li>
+    <?php } ?>
+    <li class="<?php if (!isset($paginator->getPages()->next)) { ?>disabled<?php } ?>">
+        <a href="<?= isset($paginator->getPages()->next) ? strtr($pageUrlPattern, array('0page0' => $paginator->getPages()->next)) : '#'?>">&rsaquo;</a>
+    </li>
+    <li class="<?php if (!isset($paginator->getPages()->next)) { ?>disabled<?php } ?>">
+        <a href="<?= isset($paginator->getPages()->next) ? strtr($pageUrlPattern, array('0page0' => $paginator->getPages()->last)) : '#'?>">&raquo;</a>
+    </li>
+</ul>

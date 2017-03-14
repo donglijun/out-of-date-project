@@ -1,0 +1,30 @@
+<div class="modal fade" id="approve-modal" tabindex="-1" role="dialog" aria-labelledby="approve" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Approve Application</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="approve-app-id" class="control-label">Application ID:</label>
+                        <input type="text" class="form-control input-sm" id="approve-app-id" name="approve-app-id" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="approve-channel-class" class="control-label">Channel Class</label>
+                        <select name="approve-channel-class" id="approve-channel-class" class="form-control input-sm">
+                            <?php foreach ($classes as $val) { ?>
+                                <option value="<?=$val['id']?>"><?=Misc::escape($val['title'])?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submit-approve">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>

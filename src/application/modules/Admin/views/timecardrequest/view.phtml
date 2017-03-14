@@ -1,0 +1,40 @@
+<div class="container">
+    <h1 class="text-center">View Exchange Request Info</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/timecardrequest/list" class="btn btn-primary">Exchange Requests</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <th>Card ID</th>
+                    <td><?=isset($data['id']) ? $data['id'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>User ID</th>
+                    <td><?=isset($data['user']) ? $data['user'] : ''?></td>
+                </tr>
+                <tr>
+                    <th>Type</th>
+                    <td><?=isset($data['title']) ? Misc::escape($data['title']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Code</th>
+                    <td><?=isset($data['code']) ? Misc::escape($data['code']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Created On</th>
+                    <td><?=isset($data['created_on']) && $data['created_on'] ? date('Y-m-d H:i:s', $data['created_on']) : ''?></td>
+                </tr>
+                <tr>
+                    <th>Processed On</th>
+                    <td><?=isset($data['processed_on']) && $data['processed_on'] ? date('Y-m-d H:i:s', $data['processed_on']) : ''?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

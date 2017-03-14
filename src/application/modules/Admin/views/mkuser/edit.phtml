@@ -1,0 +1,41 @@
+<div class="container">
+    <h1 class="text-center">Edit User</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4">
+            <form class="form-horizontal" role="form" method="post" action="/admin/mkuser/<?=$action?>">
+                <input type="hidden" name="user" id="user" value="<?=isset($user) ? $user : ''?>" />
+                <div class="form-group">
+                    <label for="user_email" class="col-sm-4 control-label">Email</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="user_email" name="user_email" value="<?=isset($data['user_email']) ? Misc::escape($data['user_email']) : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="user_password" class="col-sm-4 control-label">Password</label>
+                    <div class="col-sm-8">
+                        <input type="password" class="form-control" id="user_password" name="user_password" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="nickname" class="col-sm-4 control-label">Nickname</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="nickname" name="nickname" value="<?=isset($data['nickname']) ? Misc::escape($data['nickname']) : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="user_avatar" class="col-sm-4 control-label">Avatar</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="user_avatar" name="user_avatar" value="<?=isset($data['user_avatar']) ? $data['user_avatar'] : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="/admin/mkuser/list" class="btn btn-default">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

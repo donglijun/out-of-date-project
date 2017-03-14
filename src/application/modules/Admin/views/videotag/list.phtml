@@ -1,0 +1,54 @@
+<div class="container">
+    <h1 class="text-center">Tag List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <a href="/admin/videotag/create" class="btn btn-primary">New</a>
+        </div>
+        <div class="col-md-10">
+            <form class="form-inline" role="form" method="get" action="/admin/videotag/list">
+                <div class="form-group">
+                    <label for="group" class="control-label input-sm">Group</label>
+                    <select name="group" class="form-control input-sm">
+                        <option value="">All</option>
+                        <?php foreach ($groups as $val) { ?>
+                            <option value="<?=$val['id']?>" <?=(isset($filter['group']) && $val['id']==$filter['group']) ? 'selected="selected"' : ''?>><?=Misc::escape($val['name'])?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Group</th>
+                    <th>Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><a href="/admin/videolinktag/list?tag=<?=$row['id']?>" target="_blank"><?=Misc::escape($row['name'])?></a></td>
+                        <td><?=$row['group']?></td>
+                        <td>
+                            <a href="/admin/videotag/update?id=<?=$row['id']?>" class="btn btn-primary btn-sm">Edit</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

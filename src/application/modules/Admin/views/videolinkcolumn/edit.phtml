@@ -1,0 +1,42 @@
+<div class="container">
+    <h1 class="text-center">Edit Link Column</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <form class="form-horizontal" role="form" method="post" action="/admin/videolinkcolumn/<?=$action?>">
+                <input type="hidden" name="id" id="id" value="<?=isset($id) ? $id : ''?>" />
+                <div class="form-group">
+                    <label for="link" class="col-sm-2 control-label">Link</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static">
+                            <?php if (isset($linkInfo)) { ?><a href="<?=Misc::escape($linkInfo['url'])?>" target="_blank"><?=Misc::escape($linkInfo['title'])?></a><?php } else { ?><?=isset($data['link']) ? $data['link'] : ''?><?php } ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="column" class="col-sm-2 control-label">Column</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static"><?=isset($data['column']) ? $data['column'] : ''?></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="display_order" class="col-sm-2 control-label">Display Order</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="display_order" name="display_order" value="<?=isset($data['display_order']) ? Misc::escape($data['display_order']) : ''?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="created_on" class="col-sm-2 control-label">Created</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static"><?=date('Y-m-d H:i:s', $data['created_on'])?></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="<?=$_SERVER['HTTP_REFERER'] ?: '/admin/videolinkcolumn/list'?>" class="btn btn-default">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

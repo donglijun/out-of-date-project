@@ -1,0 +1,6 @@
+.idea
+.DS_Store
+/src/application/modules/Admin/controllers/Test.php 
+/src/application/modules/Admin/views/test/
+/tool/crawl/hearthhead/data
+/src/log

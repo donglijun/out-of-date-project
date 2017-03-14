@@ -1,0 +1,124 @@
+
+<h1 style="text-align: center;">Test tool</h1>
+<h2>Create deck</h2>
+<form method="post" action="/deck/create">
+    user: <input tye="text" name="userid" value="1" /><br />
+    title: <input type="text" name="title" value="我的方案" /><br />
+    game_version: <input type="text" name="game_version" value="1.0" /><br />
+    category: <input type="text" name="category" value="1" /><br />
+    class: <input type="text" name="class" value="druid" /><br />
+    lang: <input type="text" name="lang" value="zh_CN" /><br />
+    is_public: <input type="text" name="is_public" value="1" /><br />
+    card1: <input type="text" name="cards[0][i]" value="ex1_238" />
+    <input type="text" name="cards[0][c]" value="2" />
+    <input type="text" name="cards[0][k]" value="0" /><br />
+    card2: <input type="text" name="cards[1][i]" value="ex2_333" />
+    <input type="text" name="cards[1][c]" value="1" />
+    <input type="text" name="cards[1][k]" value="1" /><br />
+    ability: <input type="text" name="distribution[a]" value="1" /><br />
+    minion: <input type="text" name="distribution[m]" value="1" /><br />
+    weapon: <input type="text" name="distribution[w]" value="1" /><br />
+    description: <textarea name="description" cols="50" rows="3">写点儿攻略</textarea><br />
+    checksum: <input type="text" name="checksum" value="" /><br />
+    session: <input type="text" name="session" value="" /><br />
+
+    <input type="submit" value="Submit" />
+</form>
+<hr />
+
+<h2>Update deck</h2>
+<form method="post" action="/deck/update">
+    deck: <input type="text" name="deckid" value="1" /><br />
+    user: <input tye="text" name="userid" value="1" /><br />
+    title: <input type="text" name="title" value="我的方案" /><br />
+    game_version: <input type="text" name="game_version" value="1.0" /><br />
+    category: <input type="text" name="category" value="1" /><br />
+    class: <input type="text" name="class" value="druid" /><br />
+    lang: <input type="text" name="lang" value="zh_CN" /><br />
+    is_public: <input type="text" name="is_public" value="1" /><br />
+    card1: <input type="text" name="cards[0][i]" value="ex1_238" />
+    <input type="text" name="cards[0][c]" value="2" />
+    <input type="text" name="cards[0][k]" value="0" /><br />
+    card2: <input type="text" name="cards[1][i]" value="ex2_333" />
+    <input type="text" name="cards[1][c]" value="1" />
+    <input type="text" name="cards[1][k]" value="1" /><br />
+    ability: <input type="text" name="distribution[a]" value="1" /><br />
+    minion: <input type="text" name="distribution[m]" value="1" /><br />
+    weapon: <input type="text" name="distribution[w]" value="1" /><br />
+    description:<textarea name="description" cols="50" rows="3">写点儿攻略</textarea><br />
+    checksum: <input type="text" name="checksum" value="" /><br />
+    session: <input type="text" name="session" value="" /><br />
+
+    <input type="submit" value="Submit" />
+</form>
+<hr />
+
+<h2>Delete deck</h2>
+<form method="post" action="/deck/delete">
+    user: <input tye="text" name="userid" value="1" /><br />
+    deck ids: <input type="text" name="deck_ids" value="1" /><br />
+    session: <input type="text" name="session" value="" /><br />
+
+    <input type="submit" value="Submit" />
+</form>
+<hr />
+
+<h2>Get deck</h2>
+<form method="post" action="/deck/get">
+    user: <input tye="text" name="userid" value="1" /><br />
+    deck: <input type="text" name="deckid" value="1" /><br />
+
+    <input type="submit" value="Submit" />
+</form>
+<hr />
+
+<h2>My deck list</h2>
+<form method="post" action="/deck/list">
+    user: <input tye="text" name="userid" value="1" /><br />
+    session: <input type="text" name="session" value="" /><br />
+
+    <input type="submit" value="Submit" />
+</form>
+<hr />
+
+<h2>Search deck</h2>
+<form method="post" action="/deck/search">
+    user: <input tye="text" name="userid" value="1" /><br />
+    category: <input type="text" name="category" value="1" /><br />
+    class: <input type="text" name="class" value="druid" /><br />
+    lang: <input type="text" name="lang" value="zh_CN" /><br />
+    keywords: <input type="text" name="q" value="" /><br />
+    page: <input type="text" name="page" value="1" /><br />
+    count: <input type="text" name="count" value="20" /><br />
+
+    <input type="submit" value="Submit" />
+</form>
+<hr />
+
+<h2>Save favorite</h2>
+<form method="post" action="/favorite/follow">
+    user: <input tye="text" name="userid" value="1" /><br />
+    deck: <input tye="text" name="deckid" value="1" /><br />
+    session: <input type="text" name="session" value="" /><br />
+
+    <input type="submit" value="Submit" />
+</form>
+<hr />
+
+<h2>Delete favorite</h2>
+<form method="post" action="/favorite/unfollow">
+    user: <input tye="text" name="userid" value="1" /><br />
+    favorite ids: <input tye="text" name="favorite_ids" value="1" /><br />
+    session: <input type="text" name="session" value="" /><br />
+
+    <input type="submit" value="Submit" />
+</form>
+<hr />
+
+<h2>My favorites</h2>
+<form method="post" action="/favorite/list">
+    user: <input tye="text" name="userid" value="1" /><br />
+    session: <input type="text" name="session" value="" /><br />
+
+    <input type="submit" value="Submit" />
+</form>

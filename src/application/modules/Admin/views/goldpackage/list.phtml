@@ -1,0 +1,79 @@
+<div class="container">
+    <h1 class="text-center">Gold Package</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <a href="/admin/goldpackage/create" class="btn btn-primary">New</a>
+        </div>
+        <div class="col-md-10">
+            <form class="form-inline" role="form" method="get" action="/admin/goldpackage/list">
+                <div class="form-group">
+                    <label for="column" class="control-label input-sm">Client</label>
+                    <select name="client" class="form-control input-sm">
+                        <option value="">All</option>
+                        <?php foreach ($clients as $key => $val) { ?>
+                            <option value="<?=$key?>" <?=(isset($filter['client']) && $key===(int) $filter['client']) ? 'selected="selected"' : ''?>><?=Misc::escape($val)?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Money</th>
+                    <th>Unit</th>
+                    <th>Golds</th>
+                    <th>Bonus</th>
+                    <th>Client</th>
+                    <th>Created On</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=Misc::escape($row['title'])?></td>
+                        <td><?=$row['money']?></td>
+                        <td><?=Misc::escape($row['money_unit'])?></td>
+                        <td><?=$row['golds']?></td>
+                        <td><?=$row['bonus']?></td>
+                        <td><?=isset($clients[$row['client']]) ? $clients[$row['client']] : $row['client']?></td>
+                        <td><?=date('Y-m-d H:i', $row['created_on'])?></td>
+                        <td>
+                            <a href="/admin/goldpackage/update?id=<?=$row['id']?>" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="/admin/goldpackage/delete?ids=<?=$row['id']?>" class="btn btn-danger btn-sm btn-delete" data-id="<?=$row['id']?>">Delete</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $(".btn-delete").click(function() {
+            return window.confirm('Really???');
+        });
+    });
+</script>

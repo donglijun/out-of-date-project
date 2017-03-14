@@ -1,0 +1,98 @@
+<div class="container">
+    <h1 class="text-center">Streaming Broadcast Highlight List</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <form class="form-inline" role="form" method="get" action="/admin/streamingbroadcasthighlight/list">
+                <div class="form-group">
+                    <label for="keyword" class="control-label input-sm">Channel ID</label>
+                    <input type="text" name="channel" id="channel" class="form-control input-sm" value="<?=isset($filter['channel']) ? $filter['channel'] : ''?>">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+        <div class="col-md-2">
+            <a href="/admin/streamingbullet/list" class="btn btn-info">Bullet List</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Channel</th>
+                    <th>Title</th>
+                    <th>Length</th>
+                    <th>Size</th>
+                    <th>Views</th>
+                    <th>Uploaded On</th>
+                    <th>Hidden</th>
+                    <th>
+                        &nbsp;
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr id="row-<?=$row['id']?>">
+                        <td><?=$row['id']?></td>
+                        <td><?=$row['channel']?></td>
+                        <td><?=Misc::escape($row['title'])?></td>
+                        <td><?=Misc::formatTimeLength($row['length'])?></td>
+                        <td><?=number_format($row['size'])?></td>
+                        <td><?=number_format($row['total_views'])?></td>
+                        <td><?=$row['uploaded_on'] ? date('Y-m-d H:i', $row['uploaded_on']) : ''?></td>
+                        <td><?=$row['is_hidden'] ? 'Y' : 'N'?></td>
+                        <td>
+                            <a href="/admin/streamingbroadcasthighlight/view?highlight=<?=$row['id']?>" target="_blank" class="btn btn-primary btn-sm">View</a>
+                            <?php if (!$row['is_hidden']) {?>
+                            <a href="/admin/streamingbroadcasthighlight/hide?highlight=<?=$row['id']?>" class="btn btn-warning btn-sm btn-hide" data-id="<?=$row['id']?>">Hide</a>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#selectAll").click(function() {
+            var checked = $(this).prop("checked");
+
+            $("input[name='ids']").prop("checked", checked);
+        });
+
+        $(".btn-hide").each(function() {
+            $(this).click(function() {
+                if (window.confirm('Really hide???')) {
+                    var btn = $(this),
+                        id  = btn.data("id");
+
+                    $.post(
+                        "/admin/streamingbroadcasthighlight/hide",
+                        {
+                            highlight: id
+                        },
+                        function(response) {
+                            window.location.reload();
+                        },
+                        "json"
+                    );
+                }
+
+                return false;
+            });
+        });
+    });
+</script>

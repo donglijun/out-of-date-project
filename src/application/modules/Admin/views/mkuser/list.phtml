@@ -1,0 +1,120 @@
+<div class="container">
+    <h1 class="text-center">Mkjogo Users</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-inline" role="form" method="get" action="/admin/mkuser/list">
+                <div class="form-group">
+                    <select name="search_field" class="form-control input-sm">
+                        <option value="user_id" <?=(isset($filter['search_field']) && 'user_id'==$filter['search_field']) ? 'selected="selected"' : ''?>>User ID</option>
+                        <option value="username_clean" <?=(isset($filter['search_field']) && 'username_clean'==$filter['search_field']) ? 'selected="selected"' : ''?>>User Name</option>
+                        <option value="user_email" <?=(isset($filter['search_field']) && 'user_email'==$filter['search_field']) ? 'selected="selected"' : ''?>>Email</option>
+                    </select>
+                    <input type="text" name="search_value" class="form-control input-sm" value="<?=isset($filter['search_value']) ? $filter['search_value'] : ''?>">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Query</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php include Yaf_Registry::get('layout')->getPath() . DIRECTORY_SEPARATOR . 'paginator.phtml'; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Nickname</th>
+                    <th>Registry Date</th>
+                    <th>Email</th>
+                    <th>Birthday</th>
+                    <th>Last Visit</th>
+                    <th>Lang</th>
+                    <th>Mute</th>
+                    <th>Banned</th>
+                    <th>Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data as $row) { ?>
+                    <tr>
+                        <td><?=$row['user_id']?></td>
+                        <td><a href="/admin/mkuser/view?user=<?=$row['user_id']?>"><?=Misc::escape($row['username'])?></a></td>
+                        <td><?=isset($row['nickname']) && $row['nickname'] ? Misc::escape($row['nickname']) : ''?></td>
+                        <td><?=date('Y-m-d H:i', $row['user_regdate'])?></td>
+                        <td><?=Misc::escape($row['user_email'])?></td>
+                        <td><?=$row['user_birthday']?></td>
+                        <td><?=$row['user_lastvisit'] ? date('Y-m-d H:i', $row['user_lastvisit']) : ''?></td>
+                        <td><?=$row['user_lang']?></td>
+                        <td id="mute-<?=$row['user_id']?>"><?=isset($row['mute_until']) && ($row['mute_until'] > $now) ? 'Y' : ''?></td>
+                        <td id="banned-<?=$row['user_id']?>"><?=isset($row['ban_until']) && ($row['ban_until'] > $now) ? 'Y' : ''?></td>
+                        <td>
+                            <a href="/admin/mkuser/update?user=<?=$row['user_id']?>" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="/admin/mkuser/mute?ids=<?=$row['user_id']?>&days=<?=isset($row['mute_until']) && ($row['mute_until'] > $now) ? -1 : 14?>" class="btn btn-warning btn-sm btn-mute" data-id="<?=$row['user_id']?>" data-status="<?=isset($row['mute_until']) && ($row['mute_until'] > $now) ? 1 : 0?>"><?=isset($row['mute_until']) && ($row['mute_until'] > $now) ? 'Release Mute' : 'Mute'?></a>
+                            <a href="/admin/mkuser/ban?ids=<?=$row['user_id']?>&days=<?=isset($row['ban_until']) && ($row['ban_until'] > $now) ? -1 : 14?>" class="btn btn-warning btn-sm btn-ban" data-id="<?=$row['user_id']?>" data-status="<?=isset($row['ban_until']) && ($row['ban_until'] > $now) ? 1 : 0?>"><?=isset($row['ban_until']) && ($row['ban_until'] > $now) ? 'Release Ban' : 'Ban'?></a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $(".btn-mute").each(function() {
+            $(this).click(function() {
+                var btn        = $(this),
+                    user_id    = btn.data("id"),
+                    days       = btn.data("status") ? -1 : 14;
+
+                $.post(
+                    "/admin/mkuser/mute",
+                    {
+                        ids: user_id,
+                        days: days
+                    },
+                    function(response) {
+                        if (response.code == 200) {
+                            $("#mute-" + user_id).text(days > 0 ? 'Y' : '');
+                            btn.data("status", days > 0 ? 1 : 0).text(days > 0 ? "Release Mute" : "Mute");
+                        }
+                    },
+                    "json"
+                );
+
+                return false;
+            });
+        });
+
+        $(".btn-ban").each(function() {
+            $(this).click(function() {
+                var btn        = $(this),
+                    user_id    = btn.data("id"),
+                    days       = btn.data("status") ? -1 : 14;
+
+                $.post(
+                    "/admin/mkuser/ban",
+                    {
+                        ids: user_id,
+                        days: days
+                    },
+                    function(response) {
+                        if (response.code == 200) {
+                            $("#banned-" + user_id).text(days > 0 ? 'Y' : '');
+                            btn.data("status", days > 0 ? 1 : 0).text(days > 0 ? "Release Ban" : "Ban");
+                        }
+                    },
+                    "json"
+                );
+
+                return false;
+            });
+        });
+    });
+</script>
